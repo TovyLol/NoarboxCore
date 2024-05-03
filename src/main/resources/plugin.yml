@@ -1,0 +1,4 @@
+name: NoarboxCore
+version: '${project.version}'
+main: projects.tovy.github.Main
+api-version: '1.18'
