@@ -1,17 +1,34 @@
 package projects.tovy.github;
 
 import org.bukkit.plugin.java.JavaPlugin;
+import projects.tovy.github.PlayerUsage.ShulkerRooms.ShulkerCommands;
+import projects.tovy.github.PlayerUsage.ShulkerRooms.ShulkerManagment;
 
 public final class Main extends JavaPlugin {
-
+    //connections
+    private final ShulkerManagment shulkerManagment = new ShulkerManagment();
     @Override
     public void onEnable() {
-        // Plugin startup logic
+        //config stuff
+        getConfig().options().copyDefaults();
+        saveConfig();
+
 
     }
 
     @Override
     public void onDisable() {
-        // Plugin shutdown logic
+        System.out.println("'het komt wel goed trust the process' -tovy");
+    }
+    public void loadCommands() {
+        /*
+        Never forget to register your commands in plugin.yml
+         */
+
+        getCommand("shulker").setExecutor(new ShulkerCommands(shulkerManagment));
+
+    }
+    public void loadEvents() {
+
     }
 }

@@ -2,3 +2,10 @@ name: NoarboxCore
 version: '${project.version}'
 main: projects.tovy.github.Main
 api-version: '1.18'
+commands:
+ shulker:
+   permission: shulker.use
+
+
+# main permission will be noarbox.operator.usage
+
