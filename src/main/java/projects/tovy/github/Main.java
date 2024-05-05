@@ -3,6 +3,8 @@ package projects.tovy.github;
 import org.bukkit.plugin.java.JavaPlugin;
 import projects.tovy.github.PlayerUsage.ShulkerRooms.ShulkerCommands;
 import projects.tovy.github.PlayerUsage.ShulkerRooms.ShulkerManagment;
+import projects.tovy.github.ServerUsage.DeathMessages;
+import projects.tovy.github.ServerUsage.JoinMessages;
 
 public final class Main extends JavaPlugin {
     //connections
@@ -27,7 +29,8 @@ public final class Main extends JavaPlugin {
 
     }
     public void loadEvents() {
-
+        getServer().getPluginManager().registerEvents(new DeathMessages(),this);
+        getServer().getPluginManager().registerEvents(new JoinMessages(), this);
     }
     @Override
     public void onDisable() {
