@@ -21,7 +21,7 @@ public class ShulkerCommands implements CommandExecutor {
         if (command.getName().equalsIgnoreCase("shulker")) {
             if (sender instanceof Player) {
                 Player player = (Player) sender;
-                if (args.length == 1){
+                if (args.length == 1) {
                     if (player.hasPermission("noarbox.operator.usage")) {
                         if (args[0].equalsIgnoreCase("set")) {
                             try {
@@ -34,7 +34,7 @@ public class ShulkerCommands implements CommandExecutor {
                                 player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 2, 1);
                             }
 
-                        } else if (args[0].equalsIgnoreCase("del")){
+                        } else if (args[0].equalsIgnoreCase("del")) {
                             if (args[1].equalsIgnoreCase("all")) {
                                 if (!deleteRoomsFlag) {
                                     deleteRoomsFlag = true;
@@ -64,12 +64,12 @@ public class ShulkerCommands implements CommandExecutor {
                                     player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 2, 1);
                                 }
                             }
-                        } else{
+                        } else {
                             for (ProtectedRegion region : WorldGuard.getInstance()
-                            .getPlatform()
-                            .getRegionContainer()
-                            .createQuery()
-                            .getApplicableRegions(BukkitAdapter.adapt(player.getLocation()))) {
+                                    .getPlatform()
+                                    .getRegionContainer()
+                                    .createQuery()
+                                    .getApplicableRegions(BukkitAdapter.adapt(player.getLocation()))) {
 
                                 if (!region.getId().equalsIgnoreCase("shulkerregion")) {
                                     continue;
@@ -91,14 +91,16 @@ public class ShulkerCommands implements CommandExecutor {
                             }
                             return true;
                         }
+                    }
+                } else {
+                    sender.sendMessage(ChatColor.RED + "Only players can use this command.");
+                    return true;
                 }
-            } else {
-                sender.sendMessage(ChatColor.RED + "Only players can use this command.");
-                return true;
             }
         }
         return false;
     }
+
 
 
     //code that gets run to check the rooms

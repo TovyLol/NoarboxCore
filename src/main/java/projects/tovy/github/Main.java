@@ -13,12 +13,10 @@ public final class Main extends JavaPlugin {
         getConfig().options().copyDefaults();
         saveConfig();
 
+        //calling functions
+        loadCommands();
+        loadEvents();
 
-    }
-
-    @Override
-    public void onDisable() {
-        System.out.println("'het komt wel goed trust the process' -tovy");
     }
     public void loadCommands() {
         /*
@@ -30,5 +28,9 @@ public final class Main extends JavaPlugin {
     }
     public void loadEvents() {
 
+    }
+    @Override
+    public void onDisable() {
+        System.out.println("'het komt wel goed trust the process' -tovy");
     }
 }
