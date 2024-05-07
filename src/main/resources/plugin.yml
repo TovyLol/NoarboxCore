@@ -5,6 +5,8 @@ api-version: '1.18'
 commands:
  shulker:
    permission: shulker.use
+ warp:
+
 
 
 # main permission will be noarbox.operator.usage

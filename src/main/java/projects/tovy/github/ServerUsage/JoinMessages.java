@@ -1,5 +1,6 @@
 package projects.tovy.github.ServerUsage;
 
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -16,12 +17,12 @@ public class JoinMessages implements Listener {
         if (p.getName().equalsIgnoreCase("2b2tbase_alt")) {
             e.setJoinMessage("");
         } else {
-            e.setJoinMessage("");
+            e.setJoinMessage(ChatColor.BOLD.BLUE + "+" + p);
         }
         if (p.getName().equalsIgnoreCase("2b2tbase_alt")) {
             event.setQuitMessage("");
         } else {
-            event.setQuitMessage("");
+            event.setQuitMessage((ChatColor.BOLD.BLUE + "-" + player);
         }
     }
 }

@@ -59,6 +59,7 @@ public class ShulkerCommands implements CommandExecutor {
                                 }
                                 if (shulkerManagment.removeRoom(roomIdToDelete)) {
                                     player.sendMessage("Room " + roomIdToDelete + " has been deleted.");
+
                                 } else {
                                     player.sendMessage("Room " + roomIdToDelete + " not found.");
                                     player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 2, 1);
