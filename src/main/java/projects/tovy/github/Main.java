@@ -7,6 +7,7 @@ import projects.tovy.github.PlayerUsage.ShulkerRooms.ShulkerCommands;
 import projects.tovy.github.PlayerUsage.ShulkerRooms.ShulkerManagment;
 import projects.tovy.github.PlayerUsage.Warps.WarpCMD;
 import projects.tovy.github.PlayerUsage.Warps.WarpManager;
+import projects.tovy.github.ServerUsage.ChatFilter;
 import projects.tovy.github.ServerUsage.DeathMessages;
 import projects.tovy.github.ServerUsage.JoinMessages;
 import org.bukkit.entity.Player;
@@ -51,6 +52,7 @@ public final class Main extends JavaPlugin {
     public void loadEvents() {
         getServer().getPluginManager().registerEvents(new DeathMessages(), this);
         getServer().getPluginManager().registerEvents(new JoinMessages(), this);
+        getServer().getPluginManager().registerEvents(new ChatFilter(), this);
     }
     public void noPermission(CommandSender sender) {
         if (sender instanceof Player) {

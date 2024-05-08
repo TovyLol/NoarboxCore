@@ -22,7 +22,7 @@ public class JoinMessages implements Listener {
         if (p.getName().equalsIgnoreCase("2b2tbase_alt")) {
             event.setQuitMessage("");
         } else {
-            event.setQuitMessage((ChatColor.BOLD.BLUE + "-" + player);
+            event.setQuitMessage((ChatColor.BOLD.BLUE + "-" + player));
         }
     }
 }
