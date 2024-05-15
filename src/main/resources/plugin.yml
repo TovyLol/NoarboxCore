@@ -3,9 +3,14 @@ version: '${project.version}'
 main: projects.tovy.github.Main
 api-version: '1.18'
 commands:
+ screenshare:
+   aliases: ss
+   permission: ss.staff.usage
  shulker:
-   permission: shulker.use
+   permission: shulker.player.usage
  warp:
+
+
 
 
 

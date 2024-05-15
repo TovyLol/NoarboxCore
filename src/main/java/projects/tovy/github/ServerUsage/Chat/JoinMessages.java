@@ -1,4 +1,4 @@
-package projects.tovy.github.ServerUsage;
+package projects.tovy.github.ServerUsage.Chat;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;

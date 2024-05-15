@@ -1,4 +1,4 @@
-package projects.tovy.github.ServerUsage;
+package projects.tovy.github.ServerUsage.Chat;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

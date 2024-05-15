@@ -1,2 +1,6 @@
-prefix: &9&lNoarbox |
-errormsg: &4&lERROR &fSomething undefined occured
+prefix: "&9&lNoarbox |"
+errormsg: "&4&lERROR &fSomething undefined occured"
+
+
+# Region Configs
+ssregion: "ssroom"
