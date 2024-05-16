@@ -12,6 +12,8 @@ import projects.tovy.github.ServerUsage.Chat.ChatFilter;
 import projects.tovy.github.ServerUsage.Chat.DeathMessages;
 import projects.tovy.github.ServerUsage.Chat.JoinMessages;
 import org.bukkit.entity.Player;
+import projects.tovy.github.ServerUsage.Shops.ShopsMain;
+
 public final class Main extends JavaPlugin {
     // Connections
     private final ShulkerManagment shulkerManagment = new ShulkerManagment();
@@ -37,7 +39,7 @@ public final class Main extends JavaPlugin {
     public static FileConfiguration getPluginConfig() {
         return getInstance().getConfig();
     }
-// FileConfiguration config = Main.getPluginConfig(); to access to config from the main file
+// FileConfiguration config = Main.getPluginConfig();
 
     public void loadCommands() {
         /*
@@ -54,6 +56,7 @@ public final class Main extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new DeathMessages(), this);
         getServer().getPluginManager().registerEvents(new JoinMessages(), this);
         getServer().getPluginManager().registerEvents(new ChatFilter(this), this);
+        getServer().getPluginManager().registerEvents(new ShopsMain(), this);
 
     }
     public void noPermission(CommandSender sender) {
