@@ -3,6 +3,7 @@ package projects.tovy.github.ServerUsage.Shops;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 
 public class ShopsMain implements Listener {
@@ -15,13 +16,16 @@ public class ShopsMain implements Listener {
         Entity entity = e.getRightClicked();
         if (entity.getCustomName() != null ) {
             switch(entity.getCustomName()) {
-                case "":
-                    getShops.getShop1();
+                case "&5&kShulkers":
+                    getShops.getShulkerShop(e.getPlayer());
                     break;
 
             }
         }
 
+
+    }
+    public void onInvclick(InventoryClickEvent e) {
 
     }
 }

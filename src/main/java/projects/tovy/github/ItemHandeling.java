@@ -1,4 +1,6 @@
 package projects.tovy.github;
+
+import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -7,8 +9,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.List;
 
 public class ItemHandeling {
-    private ItemStack itemStack;
-    private ItemMeta  meta;
+    private final ItemStack itemStack;
+    private final ItemMeta meta;
+
     public ItemHandeling(ItemStack itemStack) {
         this.itemStack = itemStack;
         this.meta = itemStack.getItemMeta();
@@ -16,10 +19,6 @@ public class ItemHandeling {
 
     public ItemStack getItemStack() {
         return itemStack;
-    }
-
-    public void setItemStack(ItemStack itemStack) {
-        this.itemStack = itemStack;
     }
 
     public String getItemName() {
@@ -30,7 +29,6 @@ public class ItemHandeling {
     }
 
     public void setItemName(String name) {
-        ;
         if (meta != null) {
             meta.setDisplayName(name);
             itemStack.setItemMeta(meta);
@@ -38,7 +36,6 @@ public class ItemHandeling {
     }
 
     public List<String> getItemLore() {
-        ItemMeta meta = itemStack.getItemMeta();
         if (meta != null && meta.hasLore()) {
             return meta.getLore();
         }
@@ -46,11 +43,18 @@ public class ItemHandeling {
     }
 
     public void setItemLore(List<String> lore) {
-
         if (meta != null) {
             meta.setLore(lore);
             itemStack.setItemMeta(meta);
         }
+    }
+
+    public Material getItemMaterial() {
+        return itemStack.getType();
+    }
+
+    public void setItemMaterial(Material material) {
+        itemStack.setType(material);
     }
 
     public int getItemDurability() {
@@ -71,6 +75,7 @@ public class ItemHandeling {
             itemStack.setItemMeta(meta);
         }
     }
+
     public void showGlow(boolean show) {
         if (meta != null) {
             if (show) {
@@ -83,6 +88,7 @@ public class ItemHandeling {
             itemStack.setItemMeta(meta);
         }
     }
+
     public void hideEssentialsArmor(boolean show) {
         if (meta != null) {
             if (show) {
@@ -93,6 +99,7 @@ public class ItemHandeling {
             itemStack.setItemMeta(meta);
         }
     }
+
     public void hideEssentialsItems(boolean show) {
         if (meta != null) {
             if (show) {
@@ -103,5 +110,4 @@ public class ItemHandeling {
             itemStack.setItemMeta(meta);
         }
     }
-
 }

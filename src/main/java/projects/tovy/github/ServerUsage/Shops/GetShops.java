@@ -1,4 +1,5 @@
 package projects.tovy.github.ServerUsage.Shops;
+import org.bukkit.entity.Player;
 
 public class GetShops {
     private ShopFunctions func;
@@ -7,7 +8,9 @@ public class GetShops {
     }
 
     //proof of concept
-    public void getShop1() {
-        func.funcShop1();
+    public void getShulkerShop(Player p) {
+        func.funcShulkerShop(p);
+
     }
+
 }

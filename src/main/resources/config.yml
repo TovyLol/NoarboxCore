@@ -4,3 +4,9 @@ errormsg: "&4&lERROR &fSomething undefined occured"
 
 # Region Configs
 ssregion: "ssroom"
+
+#Shop names for elytra
+shulkershop: "&5&kShulkers"
+1stgearshop: "&6&kPickachu Gear"
+elytrashop: "&9&lElytra"
+
