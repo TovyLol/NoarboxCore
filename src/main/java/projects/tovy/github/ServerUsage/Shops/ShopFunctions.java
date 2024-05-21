@@ -1,73 +1,50 @@
 package projects.tovy.github.ServerUsage.Shops;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import projects.tovy.github.EasyGuiBorder;
 import projects.tovy.github.ItemHandeling;
+
+import java.util.List;
 
 public class ShopFunctions {
     private ItemHandeling item;
     private EasyGuiBorder border;
-
-
 
     public ShopFunctions(ItemHandeling item, EasyGuiBorder border) {
         this.item = item;
         this.border = border;
     }
 
-    public void funcShulkerShop(Player p) {
-        border.openGuiBorder(p, 54, "&5&kShulkers");
+    public void openShop(Player p, String title, List<ShopTemplate> shopTemplates) {
+        border.openGuiBorder(p, 54, title);
         Inventory inv = p.getOpenInventory().getTopInventory();
 
-        ItemStack rs = new ItemStack(Material.RED_SHULKER_BOX);
- 
+        for (ShopTemplate template : shopTemplates) {
+            ItemStack itemStack = template.createItemStack(item);
+            inv.setItem(template.getSlot(), itemStack);
+        }
+    }
 
+    public List<ShopTemplate> getShulkerShopItems() {
+        return List.of(
+                new ShopTemplate(Material.SHULKER_BOX, "&dShulker Box", 64, 10),
+                new ShopTemplate(Material.WHITE_SHULKER_BOX, "&fWhite Shulker Box", 64, 11),
+                new ShopTemplate(Material.GRAY_SHULKER_BOX, "&fGray Shulker Box", 64, 12),
+                new ShopTemplate(Material.ORANGE_SHULKER_BOX, "&#FFA500Orange Shulker Box", 64, 13),
+                new ShopTemplate(Material.RED_SHULKER_BOX, "&cRed Shulker Box", 64, 14),
+                new ShopTemplate(Material.LIGHT_BLUE_SHULKER_BOX, "&3Light Blue Shulker Box", 64, 15),
+                new ShopTemplate(Material.YELLOW_SHULKER_BOX, "&6Yellow Shulker Box", 64, 16),
+                new ShopTemplate(Material.LIME_SHULKER_BOX, "&2Lime Shulker Box", 64, 17),
+                new ShopTemplate(Material.LIGHT_GRAY_SHULKER_BOX, "&7Light Gray Shulker Box", 64, 18)
+        );
     }
 
 
-    public void getShulkerShopItems() {
-        ItemStack s = item.getItemStack();
-        item.setItemMaterial(Material.SHULKER_BOX);
-        item.setItemName("&dShulker Box");
-
-        ItemStack ws = item.getItemStack();
-        item.setItemMaterial(Material.WHITE_SHULKER_BOX);
-        item.setItemName("&fWhite Shulker Box");
-
-        ItemStack gs = item.getItemStack();
-        item.setItemMaterial(Material.GRAY_SHULKER_BOX);
-        item.setItemName("&fGray Shulker Box");
-
-        ItemStack os = item.getItemStack();
-        item.setItemMaterial(Material.ORANGE_SHULKER_BOX);
-        item.setItemName("&#FFA500Orange Shulker Box");
-
-        ItemStack rs = item.getItemStack();
-        item.setItemMaterial(Material.RED_SHULKER_BOX);
-        item.setItemName("&cRed Shulker Box");
-
-        ItemStack lbs = item.getItemStack();
-        item.setItemMaterial(Material.LIGHT_BLUE_SHULKER_BOX);
-        item.setItemName("&3Light Blue Shulker Box");
-
-        ItemStack ys = item.getItemStack();
-        item.setItemMaterial(Material.YELLOW_SHULKER_BOX);
-        item.setItemName("&6Yellow Shulker Box");
-
-        ItemStack ls = item.getItemStack();
-        item.setItemMaterial(Material.LIME_SHULKER_BOX);
-        item.setItemName("&2Lime Shulker Box");
-
-        ItemStack lgs = item.getItemStack();
-        item.setItemMaterial(Material.LIGHT_GRAY_SHULKER_BOX);
-        item.setItemName("&7Light Gray Shulker Box");
+    public void openShulkerShop(Player p) {
+        List<ShopTemplate> shulkerShopItems = getShulkerShopItems();
+        openShop(p, "&5&kShulkers", shulkerShopItems);
     }
-
-
-
 }

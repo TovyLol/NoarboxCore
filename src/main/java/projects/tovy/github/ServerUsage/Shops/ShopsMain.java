@@ -22,8 +22,6 @@ public class ShopsMain implements Listener {
 
             }
         }
-
-
     }
     public void onInvclick(InventoryClickEvent e) {
 

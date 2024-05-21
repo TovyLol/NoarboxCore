@@ -6,6 +6,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ItemHandeling {
@@ -108,6 +109,18 @@ public class ItemHandeling {
                 meta.removeItemFlags(ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_UNBREAKABLE);
             }
             itemStack.setItemMeta(meta);
+        }
+    }
+    public void setShopItem(int price) {
+        if (meta != null) {
+            List<String> shoplore = meta.hasLore() ? meta.getLore() : new ArrayList<>();
+            if (price == 0) {
+                shoplore.add("Costs 0 coins to purchase");
+            } else {
+                shoplore.add("Costs " + price + " coins to purchase");
+            }
+            shoplore.add("Right click to purchase!");
+            shoplore.add("Reminder! 64 coins is the same as 1 compressed coin!");
         }
     }
 }
