@@ -23,12 +23,10 @@ public class WarpCMD implements CommandExecutor {
         this.warpManager = warpManager;
     }
 
-
-
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage( p + ChatColor.RED + "Only players can use this command!");
+            sender.sendMessage(p + ChatColor.RED + "Only players can use this command!");
             return true;
         }
 
@@ -37,7 +35,7 @@ public class WarpCMD implements CommandExecutor {
         if (command.getName().equalsIgnoreCase("warp")) {
             if (args.length == 0) {
                 if (pl.hasPermission("noarbox.operator.usage")) {
-                    pl.sendMessage(p + ChatColor.WHITE + "Use /warp + the thing you wanna do");
+                    pl.sendMessage(p + ChatColor.WHITE + "Use /warp <name>");
                 } else {
                     main.noPermission(sender);
                 }
@@ -49,7 +47,16 @@ public class WarpCMD implements CommandExecutor {
                         main.noPermission(sender);
                     }
                 } else {
-                    pl.sendMessage(error);
+                    if (warpManager.warpExists(args[0])) {
+                        if (pl.hasPermission("noarbox.operator.usage")) {
+                            warpManager.teleportToWarp(pl, args[0]);
+                            pl.sendMessage(ChatColor.GREEN + "Warped to '" + args[0] + "' successfully!");
+                        } else {
+                            main.noPermission(sender);
+                        }
+                    } else {
+                        pl.sendMessage(error);
+                    }
                 }
             } else if (args.length == 2) {
                 if (args[0].equalsIgnoreCase("set")) {
@@ -67,10 +74,10 @@ public class WarpCMD implements CommandExecutor {
                             warpManager.deleteWarp(warpName);
                             pl.sendMessage(ChatColor.GREEN + "Warp '" + warpName + "' deleted successfully!");
                         } else {
-                            main.noPermission(sender);
+                            pl.sendMessage(error);
                         }
                     } else {
-                        pl.sendMessage(error);
+                        main.noPermission(sender);
                     }
                 } else {
                     pl.sendMessage(ChatColor.RED + "Usage: /warp set <name>, /warp del <name>, /warp list");

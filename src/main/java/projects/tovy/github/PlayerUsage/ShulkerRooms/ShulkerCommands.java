@@ -15,6 +15,7 @@ public class ShulkerCommands implements CommandExecutor {
     public ShulkerCommands  (ShulkerManagment shulkerManagment) {
         this.shulkerManagment = shulkerManagment;
     }
+
     private boolean deleteRoomsFlag = false;
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {

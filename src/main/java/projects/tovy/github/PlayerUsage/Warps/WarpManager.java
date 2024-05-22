@@ -1,85 +1,55 @@
 package projects.tovy.github.PlayerUsage.Warps;
 
 import org.bukkit.Location;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import projects.tovy.github.Main;
+import projects.tovy.github.DataBase.WarpDatabase;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Set;
+
+import java.util.List;
 
 public class WarpManager {
-    private final Main main;
-    private final File warpFile;
-    private final FileConfiguration warpConfig;
 
-    public WarpManager(Main main) {
-        this.main = main;
-        this.warpFile = new File(main.getDataFolder(), "warps.yml");
-        this.warpConfig = YamlConfiguration.loadConfiguration(warpFile);
-        createWarpFile();
+    private final WarpDatabase warpDatabase;
+
+    public WarpManager(WarpDatabase warpDatabase) {
+        this.warpDatabase = warpDatabase;
     }
 
-    private void createWarpFile() {
-        if (!warpFile.exists()) {
-            main.saveResource("warps.yml", false);
-        }
+    public void setWarp(String name, Location location) {
+        Warp warp = new Warp(
+                name,
+                location.getWorld().getName(),
+                location.getX(),
+                location.getY(),
+                location.getZ(),
+                location.getPitch(),
+                location.getYaw()
+        );
+        warpDatabase.insertWarp(warp);
     }
 
-    public void setWarp(String warpName, Location location) {
-        warpConfig.set("warps." + warpName + ".world", location.getWorld().getName());
-        warpConfig.set("warps." + warpName + ".x", location.getX());
-        warpConfig.set("warps." + warpName + ".y", location.getY());
-        warpConfig.set("warps." + warpName + ".z", location.getZ());
-        warpConfig.set("warps." + warpName + ".yaw", location.getYaw());
-        warpConfig.set("warps." + warpName + ".pitch", location.getPitch());
-
-        saveWarpFile();
+    public boolean warpExists(String name) {
+        return warpDatabase.warpExists(name);
     }
 
-    public Location getWarp(String warpName) {
-        if (!warpConfig.contains("warps." + warpName)) {
-            return null;
-        }
-
-        String worldName = warpConfig.getString("warps." + warpName + ".world");
-        double x = warpConfig.getDouble("warps." + warpName + ".x");
-        double y = warpConfig.getDouble("warps." + warpName + ".y");
-        double z = warpConfig.getDouble("warps." + warpName + ".z");
-        float yaw = (float) warpConfig.getDouble("warps." + warpName + ".yaw");
-        float pitch = (float) warpConfig.getDouble("warps." + warpName + ".pitch");
-
-        return new Location(main.getServer().getWorld(worldName), x, y, z, yaw, pitch);
-    }
-
-    public boolean warpExists(String warpName) {
-        return warpConfig.contains("warps." + warpName);
-    }
-
-    public void deleteWarp(String warpName) {
-        warpConfig.set("warps." + warpName, null);
-        saveWarpFile();
+    public void deleteWarp(String name) {
+        warpDatabase.deleteWarp(name);
     }
 
     public void listWarps(Player player) {
-        Set<String> warpNames = warpConfig.getConfigurationSection("warps").getKeys(false);
-        if (warpNames.isEmpty()) {
-            player.sendMessage("No warp points available.");
-        } else {
-            player.sendMessage("Available warp points:");
-            for (String warpName : warpNames) {
-                player.sendMessage("- " + warpName);
-            }
+        List<Warp> warps = warpDatabase.getAllWarps();
+        player.sendMessage("Warps:");
+        for (Warp warp : warps) {
+            player.sendMessage("- " + warp.getName());
         }
     }
 
-    private void saveWarpFile() {
-        try {
-            warpConfig.save(warpFile);
-        } catch (IOException e) {
-            e.printStackTrace();
+    public boolean teleportToWarp(Player player, String warpName) {
+        Warp warp = warpDatabase.getWarpByName(warpName);
+        if (warp != null) {
+            player.teleport(warp.getLocation());
+            return true;
         }
+        return false;
     }
 }
