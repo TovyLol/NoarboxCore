@@ -88,10 +88,10 @@ public final class Main extends JavaPlugin {
                 int spawny = Integer.parseInt(parts[1]);
                 int spawnz = Integer.parseInt(parts[2]);
 
-                // Create a Bukkit Location object with the spawn coordinates
+
                 Location spawnLocation = new Location(player.getWorld(), spawnx, spawny, spawnz);
 
-                // Teleport the player to the spawn location
+
                 player.teleport(spawnLocation);
             } else {
                 getLogger().warning("Spawn coordinates are invalid.");
