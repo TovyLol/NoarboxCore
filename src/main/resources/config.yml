@@ -53,3 +53,4 @@ Spawncoords: 0, 0, 0
 #  ╚═╝░░╚═╝╚══════╝░╚═════╝░╚═╝░╚════╝░╚═╝░░╚══╝╚═════╝░
 ssregion: "ssroom"
 shulkerregion: "shulkerrooms"
+spawnregion: "spawn"
