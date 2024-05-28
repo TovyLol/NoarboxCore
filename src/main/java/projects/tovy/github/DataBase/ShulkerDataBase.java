@@ -10,10 +10,11 @@ import java.util.Map;
 
 public class ShulkerDataBase {
 
-    private final String url;
 
-    public ShulkerDataBase(String filename) {
-        this.url = "jdbc:sqlite:" + filename;
+
+    private static final String DB_URL = "jdbc:sqlite:rooms.db";
+    public Connection getConnection() throws SQLException {
+        return DriverManager.getConnection(DB_URL);
     }
 
     public void createTable() {
@@ -26,7 +27,7 @@ public class ShulkerDataBase {
                 "occupied INTEGER NOT NULL" +
                 ");";
 
-        try (Connection conn = DriverManager.getConnection(url);
+        try (Connection conn = DriverManager.getConnection(DB_URL);
              Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
         } catch (SQLException e) {
@@ -37,7 +38,7 @@ public class ShulkerDataBase {
     public void insertRoom(int id, Location location) {
         String sql = "INSERT INTO shulker_rooms(id, world, x, y, z, occupied) VALUES(?,?,?,?,?,?)";
 
-        try (Connection conn = DriverManager.getConnection(url);
+        try (Connection conn = DriverManager.getConnection(DB_URL);
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, id);
             pstmt.setString(2, location.getWorld().getName());
@@ -54,7 +55,7 @@ public class ShulkerDataBase {
     public void deleteRoom(int id) {
         String sql = "DELETE FROM shulker_rooms WHERE id = ?";
 
-        try (Connection conn = DriverManager.getConnection(url);
+        try (Connection conn = DriverManager.getConnection(DB_URL);
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, id);
             pstmt.executeUpdate();
@@ -66,7 +67,7 @@ public class ShulkerDataBase {
     public void deleteAllRooms() {
         String sql = "DELETE FROM shulker_rooms";
 
-        try (Connection conn = DriverManager.getConnection(url);
+        try (Connection conn = DriverManager.getConnection(DB_URL);
              Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
         } catch (SQLException e) {
@@ -78,7 +79,7 @@ public class ShulkerDataBase {
         Map<Integer, Location> rooms = new HashMap<>();
         String sql = "SELECT * FROM shulker_rooms";
 
-        try (Connection conn = DriverManager.getConnection(url);
+        try (Connection conn = DriverManager.getConnection(DB_URL);
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
 

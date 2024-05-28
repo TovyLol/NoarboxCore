@@ -12,26 +12,27 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import projects.tovy.github.Main;
 
 public class ShulkerListener implements Listener {
-    public Main main;
-    public FileConfiguration config;
-    public ShulkerManagment manager;
-    public ShulkerListener(Main main, FileConfiguration config, ShulkerManagment manager) {
+    private final Main main;
+    private final FileConfiguration cnfg;
+    private final ShulkerManagement shulkerManagement;
+
+    public ShulkerListener(Main main, FileConfiguration cnfg, ShulkerManagement shulkerManagement) {
         this.main = main;
-        this.config = config;
-        this.manager = manager;
+        this.cnfg = cnfg;
+        this.shulkerManagement = shulkerManagement;
     }
 
     public void jukeboxClick(PlayerInteractEvent e) {
         Player p =e.getPlayer();
         Action action = e.getAction();
         Block clickedBlock = e.getClickedBlock();
-        if (main.isPlayerInsideRegion(p, config.getString("shulkerregion"))) {
+        if (main.isPlayerInsideRegion(p, cnfg.getString("shulkerregion"))) {
             if (e.getAction() == Action.RIGHT_CLICK_BLOCK) {
                 if (clickedBlock.getType() == Material.JUKEBOX) {
                     p.performCommand("/shulker");
                 }
             }
-        } else if (main.isPlayerInsideRegion(p, config.getString("spawnregion"))) {
+        } else if (main.isPlayerInsideRegion(p, cnfg.getString("spawnregion"))) {
             p.performCommand("/shulker");
         } else if (main.isPlayerInsideRegion(p, "shulkerjukebox")) {
             if (e.getAction() == Action.RIGHT_CLICK_BLOCK) {

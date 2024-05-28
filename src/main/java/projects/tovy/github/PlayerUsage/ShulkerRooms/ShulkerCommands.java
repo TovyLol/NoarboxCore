@@ -10,17 +10,16 @@ import org.bukkit.entity.Player;
 import projects.tovy.github.Main;
 
 public class ShulkerCommands implements CommandExecutor {
-    private final ShulkerManagment shulkerManagement;
+    private final ShulkerManagement shulkerManagement;
     private final Main main;
-    private final FileConfiguration config;
-    private boolean deleteRoomsFlag = false;
+    private final FileConfiguration cnfg;
 
-    public ShulkerCommands(ShulkerManagment shulkerManagement, Main main, FileConfiguration config) {
+    public ShulkerCommands(ShulkerManagement shulkerManagement, Main main, FileConfiguration cnfg) {
         this.shulkerManagement = shulkerManagement;
         this.main = main;
-        this.config = config;
+        this.cnfg = cnfg;
     }
-
+    private boolean deleteRoomsFlag = false;
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (command.getName().equalsIgnoreCase("shulker")) {
