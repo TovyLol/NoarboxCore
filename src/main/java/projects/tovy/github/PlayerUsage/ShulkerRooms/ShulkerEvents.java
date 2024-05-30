@@ -15,9 +15,9 @@ import projects.tovy.github.Main;
 public class ShulkerEvents implements Listener {
     public Main main;
     public FileConfiguration config;
-    public ShulkerManagment managment;
+    public ShulkerManagement managment;
 
-    public ShulkerEvents(Main main, FileConfiguration config, ShulkerManagment managment) {
+    public ShulkerEvents(Main main, FileConfiguration config, ShulkerManagement managment) {
         this.main = main;
         this.config = config;
         this.managment = managment;

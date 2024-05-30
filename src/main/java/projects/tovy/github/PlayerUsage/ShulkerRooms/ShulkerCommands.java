@@ -93,7 +93,7 @@ public class ShulkerCommands implements CommandExecutor {
             p.teleport(shulkerManagement.getRoom(availableRoom));
             p.sendMessage(ChatColor.BLUE + "You have been teleported to shulker room " + availableRoom);
             shulkerManagement.setRoomOccupied(availableRoom, true);
-            main.sendtoPermission(p.getName() + " went into a shulker room", "noarbox.operator.usage", p);
+            main.sendToPermission(p.getName() + " went into a shulker room", "noarbox.operator.usage", p);
         } else {
             p.sendMessage(ChatColor.RED + "No available rooms.");
             p.playSound(p.getLocation(), Sound.ENTITY_VILLAGER_NO, 2, 1);

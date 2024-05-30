@@ -44,13 +44,28 @@ public final class Main extends JavaPlugin {
         dbManager.getWarpDatabase().createTable();
         dbManager.getShulkerDataBase().createTable();
         dbManager.getDsDataBase().createTable();
+        dbManager.getKEDatabase().createTable();
 
         dsMain = new DsMain();
 
         loadCommands();
         loadEvents();
 
-        getLogger().info("Plugin has been enabled");
+        getLogger().info("T komt goed core is enabled");
+        getLogger().info("\n" +
+                "███╗░░██╗░█████╗░░█████╗░██████╗░██████╗░░█████╗░██╗░░██╗░█████╗░░█████╗░██████╗░███████╗\n" +
+                "████╗░██║██╔══██╗██╔══██╗██╔══██╗██╔══██╗██╔══██╗╚██╗██╔╝██╔══██╗██╔══██╗██╔══██╗██╔════╝\n" +
+                "██╔██╗██║██║░░██║███████║██████╔╝██████╦╝██║░░██║░╚███╔╝░██║░░╚═╝██║░░██║██████╔╝█████╗░░\n" +
+                "██║╚████║██║░░██║██╔══██║██╔══██╗██╔══██╗██║░░██║░██╔██╗░██║░░██╗██║░░██║██╔══██╗██╔══╝░░\n" +
+                "██║░╚███║╚█████╔╝██║░░██║██║░░██║██████╦╝╚█████╔╝██╔╝╚██╗╚█████╔╝╚█████╔╝██║░░██║███████╗\n" +
+                "╚═╝░░╚══╝░╚════╝░╚═╝░░╚═╝╚═╝░░╚═╝╚═════╝░░╚════╝░╚═╝░░╚═╝░╚════╝░░╚════╝░╚═╝░░╚═╝╚══════╝");
+        getLogger().info("\n" +
+                "██████╗░██╗░░░██╗  ████████╗░█████╗░██╗░░░██╗██╗░░░██╗\n" +
+                "██╔══██╗╚██╗░██╔╝  ╚══██╔══╝██╔══██╗██║░░░██║╚██╗░██╔╝\n" +
+                "██████╦╝░╚████╔╝░  ░░░██║░░░██║░░██║╚██╗░██╔╝░╚████╔╝░\n" +
+                "██╔══██╗░░╚██╔╝░░  ░░░██║░░░██║░░██║░╚████╔╝░░░╚██╔╝░░\n" +
+                "██████╦╝░░░██║░░░  ░░░██║░░░╚█████╔╝░░╚██╔╝░░░░░██║░░░\n" +
+                "╚═════╝░░░░╚═╝░░░  ░░░╚═╝░░░░╚════╝░░░░╚═╝░░░░░░╚═╝░░░");
     }
 
     public static Main getInstance() {
@@ -75,7 +90,7 @@ public final class Main extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new JoinMessages(), this);
         getServer().getPluginManager().registerEvents(new ChatFilter(this), this);
         getServer().getPluginManager().registerEvents(new ShopsMain(get), this);
-        getServer().getPluginManager().registerEvents(new DsEvents(this, dsMain, dbManager.getDsDataBase(), item), this);
+        getServer().getPluginManager().registerEvents(new DsEvents(this, dbManager.getDsDataBase(), cnfg, item), this);
     }
 
     public void noPermission(CommandSender sender) {

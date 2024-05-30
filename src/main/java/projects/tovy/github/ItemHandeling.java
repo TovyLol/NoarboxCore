@@ -13,8 +13,8 @@ public class ItemHandeling {
     private final ItemStack itemStack;
     private final ItemMeta meta;
 
-    public ItemHandeling(ItemStack itemStack) {
-        this.itemStack = itemStack;
+    public ItemHandeling(Material material) {
+        this.itemStack = new ItemStack(material);
         this.meta = itemStack.getItemMeta();
     }
 
@@ -40,7 +40,7 @@ public class ItemHandeling {
         if (meta != null && meta.hasLore()) {
             return meta.getLore();
         }
-        return null;
+        return new ArrayList<>();
     }
 
     public void setItemLore(List<String> lore) {
@@ -57,13 +57,8 @@ public class ItemHandeling {
     public void setItemMaterial(Material material) {
         itemStack.setType(material);
     }
-
-    public int getItemDurability() {
-        return itemStack.getDurability();
-    }
-
-    public void setItemDurability(int durability) {
-        itemStack.setDurability((short) durability);
+    public void setItemQuantity(int quantity) {
+        this.itemStack.setAmount(quantity);
     }
 
     public void showEnchantments(boolean show) {
@@ -80,7 +75,7 @@ public class ItemHandeling {
     public void showGlow(boolean show) {
         if (meta != null) {
             if (show) {
-                meta.addEnchant(Enchantment.DURABILITY, 0, true);
+                meta.addEnchant(Enchantment.DURABILITY, 1, true);
                 showEnchantments(false);
             } else {
                 meta.removeEnchant(Enchantment.DURABILITY);
@@ -111,6 +106,7 @@ public class ItemHandeling {
             itemStack.setItemMeta(meta);
         }
     }
+
     public void setShopItem(int price) {
         if (meta != null) {
             List<String> shoplore = meta.hasLore() ? meta.getLore() : new ArrayList<>();
@@ -121,6 +117,8 @@ public class ItemHandeling {
             }
             shoplore.add("Right click to purchase!");
             shoplore.add("Reminder! 64 coins is the same as 1 compressed coin!");
+            meta.setLore(shoplore);
+            itemStack.setItemMeta(meta);
         }
     }
 }
