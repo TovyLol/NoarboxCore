@@ -22,6 +22,7 @@ import projects.tovy.github.PlayerUsage.Warps.WarpManager;
 import projects.tovy.github.ServerUsage.Chat.ChatFilter;
 import projects.tovy.github.ServerUsage.Chat.DeathMessages;
 import projects.tovy.github.ServerUsage.Chat.JoinMessages;
+import projects.tovy.github.ServerUsage.KillEffects.GUI;
 import projects.tovy.github.ServerUsage.Shops.GetShops;
 import projects.tovy.github.ServerUsage.Shops.ShopsMain;
 
@@ -33,6 +34,7 @@ public final class Main extends JavaPlugin {
     private DatabaseManager dbManager;
     private FileConfiguration cnfg;
     private ItemHandeling item;
+    private EasyGuiBorder border;
 
     @Override
     public void onEnable() {
@@ -82,6 +84,7 @@ public final class Main extends JavaPlugin {
         getCommand("warp").setExecutor(new WarpCMD(this, warpManager));
         getCommand("ss").setExecutor(new ScreenShareCommands(this));
         getCommand("togglestash").setExecutor(new StashCommand(dsMain, cnfg, this));
+        getCommand("killeffects").setExecutor(new GUI(border, dbManager.getKEDatabase()));
     }
 
     private void loadEvents() {

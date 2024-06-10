@@ -4,6 +4,7 @@ import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -43,21 +44,39 @@ public class GUI implements CommandExecutor, Listener {
 
         if (p.hasPermission("Noarbox.gui.totem")) {
             ItemStack totemEffectItem = createItem(Material.TOTEM_OF_UNDYING, "&6Totem Effect", List.of("&fA unique Effect upon killing someone!", renl));
-            inv.setItem(slot, totemEffectItem);
+            inv.setItem(1, totemEffectItem);
 
-        } else if (p.hasPermission("Noarbox.gui.bleed")) {
-            ItemStack bleedEffectItem = createItem(Material.LAVA_BUCKET, "&cBleed Effect", List.of("&fA unique Effect upon killing someone!" + renl));
-            inv.setItem(slot, bleedEffectItem);
-
-        } else if (p.hasPermission("Noarbox.gui.rage")) {
-            ItemStack rageEffectItem = createItem(Material.POLAR_BEAR_SPAWN_EGG, "&4Rage Effect", List.of("&fA unique Effect upon killing someone!" + renl));
-            inv.setItem(slot, rageEffectItem);
-
-        } else if (p.hasPermission("Noarbox.gui.love")) {
-            ItemStack loveEffectItem = createItem(Material.HEART_OF_THE_SEA, "&dLove Effect", List.of("&fA unique Effect upon killing someone!" + renl));
-            inv.setItem(slot, loveEffectItem);
-
+        } else {
+            notUnlocked(p, 1, "&6Totem Effect");
         }
+        if (p.hasPermission("Noarbox.gui.bleed")) {
+            ItemStack bleedEffectItem = createItem(Material.LAVA_BUCKET, "&cBleed Effect", List.of("&fA unique Effect upon killing someone!" + renl));
+            inv.setItem(2, bleedEffectItem);
+
+        } else {
+            notUnlocked(p, 2, "&cBleed Effect");
+        }
+        if (p.hasPermission("Noarbox.gui.rage")) {
+            ItemStack rageEffectItem = createItem(Material.POLAR_BEAR_SPAWN_EGG, "&4Rage Effect", List.of("&fA unique Effect upon killing someone!" + renl));
+            inv.setItem(3, rageEffectItem);
+
+        } else {
+            notUnlocked(p, 3, "&4Rage Effect");
+        }
+        if (p.hasPermission("Noarbox.gui.love")) {
+            ItemStack loveEffectItem = createItem(Material.HEART_OF_THE_SEA, "&dLove Effect", List.of("&fA unique Effect upon killing someone!" + renl));
+            inv.setItem(4, loveEffectItem);
+
+        } else {
+            notUnlocked(p, 4, "&dLove Effect");
+        }
+        if (p.hasPermission("Noarbox.gui.sword")) {
+            ItemStack swordEffectItem = createItem(Material.IRON_SWORD, "&fSword Effect", List.of("&fA unique Effect upon killing someone!" + renl));
+            inv.setItem(5, swordEffectItem);
+        } else {
+            notUnlocked(p, 5, "&fSword Effect");
+        }
+
     }
 
     @EventHandler
@@ -76,7 +95,11 @@ public class GUI implements CommandExecutor, Listener {
             }
         }
     }
-
+    public void notUnlocked(Player p, int slot, String name) {
+        Inventory inv = p.getOpenInventory().getTopInventory();
+        ItemStack notunlocked = createItem(Material.RED_DYE, name , List.of("&cLOCKED"));
+        inv.setItem(slot, notunlocked);
+    }
 
 
 

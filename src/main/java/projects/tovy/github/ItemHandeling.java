@@ -60,6 +60,9 @@ public class ItemHandeling {
     public void setItemQuantity(int quantity) {
         this.itemStack.setAmount(quantity);
     }
+    public void addAttributed(String atribute, boolean yesorno) {
+        
+    }
 
     public void showEnchantments(boolean show) {
         if (meta != null) {
