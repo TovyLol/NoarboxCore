@@ -10,6 +10,9 @@ commands:
    permission: shulker.player.usage
  warp:
 
+ killeffects:
+
+
 
 
 

@@ -83,6 +83,7 @@ public final class Main extends JavaPlugin {
         getCommand("warp").setExecutor(new WarpCMD(this, warpManager));
         getCommand("togglestash").setExecutor(new StashCommand(dsMain, cnfg, this));
         getCommand("killeffects").setExecutor(new GUI(border, dbManager.getKEDatabase()));
+
     }
 
     private void loadEvents() {
