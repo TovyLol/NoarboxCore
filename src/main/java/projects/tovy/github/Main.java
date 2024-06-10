@@ -9,7 +9,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import projects.tovy.github.Administration.Staff.ScreenShare.ScreenShareCommands;
 import projects.tovy.github.DataBase.DatabaseManager;
 import projects.tovy.github.PlayerUsage.DeathStashes.DsEvents;
 import projects.tovy.github.PlayerUsage.DeathStashes.DsMain;
@@ -82,7 +81,6 @@ public final class Main extends JavaPlugin {
         WarpManager warpManager = new WarpManager(dbManager.getWarpDatabase());
         getCommand("shulker").setExecutor(new ShulkerCommands(sm, this, cnfg));
         getCommand("warp").setExecutor(new WarpCMD(this, warpManager));
-        getCommand("ss").setExecutor(new ScreenShareCommands(this));
         getCommand("togglestash").setExecutor(new StashCommand(dsMain, cnfg, this));
         getCommand("killeffects").setExecutor(new GUI(border, dbManager.getKEDatabase()));
     }
