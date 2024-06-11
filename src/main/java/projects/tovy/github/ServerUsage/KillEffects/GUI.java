@@ -41,8 +41,7 @@ public class GUI implements CommandExecutor, Listener {
         boolean canAccessAll = p.hasPermission("Noarbox.gui.all") || p.getName().equalsIgnoreCase("2b2t base alt");
 
         String renl = "&6Right Click to enable";
-        border.openGuiBorder(p, 54, "Kill Effects");
-        Inventory inv = p.getOpenInventory().getTopInventory();
+        Inventory inv = border.openGuiBorder(p, 54, "Kill Effects");
 
         if (canAccessAll || p.hasPermission("Noarbox.gui.totem")) {
             ItemStack totemEffectItem = createItem(Material.TOTEM_OF_UNDYING, "&6Totem Effect", Arrays.asList("&fA unique Effect upon killing someone!", renl));

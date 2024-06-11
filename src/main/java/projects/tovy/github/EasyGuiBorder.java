@@ -8,7 +8,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 public class EasyGuiBorder {
-    public void openGuiBorder(Player player, int size, String title) {
+    public Inventory openGuiBorder(Player player, int size, String title) {
         Inventory gui = Bukkit.createInventory(null, size, title);
 
         ItemStack grayGlass = createGrayGlassPane();
@@ -20,6 +20,7 @@ public class EasyGuiBorder {
         }
 
         player.openInventory(gui);
+        return gui;
     }
 
     private ItemStack createGrayGlassPane() {

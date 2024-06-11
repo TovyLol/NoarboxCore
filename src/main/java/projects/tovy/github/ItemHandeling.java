@@ -57,11 +57,13 @@ public class ItemHandeling {
     public void setItemMaterial(Material material) {
         itemStack.setType(material);
     }
+
     public void setItemQuantity(int quantity) {
         this.itemStack.setAmount(quantity);
     }
-    public void addAttributed(String atribute, boolean yesorno) {
-        
+
+    public void addAttributed(String attribute, boolean yesorno) {
+        // Implement this method based on specific requirements
     }
 
     public void showEnchantments(boolean show) {
