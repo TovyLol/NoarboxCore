@@ -4,7 +4,6 @@ import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -15,13 +14,14 @@ import projects.tovy.github.DataBase.KEDataBase;
 import projects.tovy.github.EasyGuiBorder;
 import projects.tovy.github.ItemHandeling;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public class GUI implements CommandExecutor, Listener {
     private EasyGuiBorder border;
     private KEDataBase db;
 
-    public GUI(EasyGuiBorder border,  KEDataBase db) {
+    public GUI(EasyGuiBorder border, KEDataBase db) {
         this.border = border;
         this.db = db;
     }
@@ -41,32 +41,27 @@ public class GUI implements CommandExecutor, Listener {
         border.openGuiBorder(p, 54, "Kill Effects");
         Inventory inv = p.getOpenInventory().getTopInventory();
 
-
         if (p.hasPermission("Noarbox.gui.totem")) {
             ItemStack totemEffectItem = createItem(Material.TOTEM_OF_UNDYING, "&6Totem Effect", List.of("&fA unique Effect upon killing someone!", renl));
             inv.setItem(1, totemEffectItem);
-
         } else {
             notUnlocked(p, 1, "&6Totem Effect");
         }
         if (p.hasPermission("Noarbox.gui.bleed")) {
             ItemStack bleedEffectItem = createItem(Material.LAVA_BUCKET, "&cBleed Effect", List.of("&fA unique Effect upon killing someone!" + renl));
             inv.setItem(2, bleedEffectItem);
-
         } else {
             notUnlocked(p, 2, "&cBleed Effect");
         }
         if (p.hasPermission("Noarbox.gui.rage")) {
             ItemStack rageEffectItem = createItem(Material.POLAR_BEAR_SPAWN_EGG, "&4Rage Effect", List.of("&fA unique Effect upon killing someone!" + renl));
             inv.setItem(3, rageEffectItem);
-
         } else {
             notUnlocked(p, 3, "&4Rage Effect");
         }
         if (p.hasPermission("Noarbox.gui.love")) {
             ItemStack loveEffectItem = createItem(Material.HEART_OF_THE_SEA, "&dLove Effect", List.of("&fA unique Effect upon killing someone!" + renl));
             inv.setItem(4, loveEffectItem);
-
         } else {
             notUnlocked(p, 4, "&dLove Effect");
         }
@@ -76,7 +71,6 @@ public class GUI implements CommandExecutor, Listener {
         } else {
             notUnlocked(p, 5, "&fSword Effect");
         }
-
     }
 
     @EventHandler
@@ -84,24 +78,40 @@ public class GUI implements CommandExecutor, Listener {
         Player p = (Player) event.getWhoClicked();
         if (event.getView().getTitle().equals("Kill Effects")) {
             event.setCancelled(true);
-
             ItemStack clickedItem = event.getCurrentItem();
             if (clickedItem != null && clickedItem.getType() != Material.AIR) {
-                String permission = clickedItem.getItemMeta().getDisplayName();
-                if (permission != null && p.hasPermission(permission)) {
-                    // Handle the click event
-                    openGui(p); // No need for try-catch block here
+                String displayName = clickedItem.getItemMeta().getDisplayName();
+                String effectColumn = getEffectColumnByName(displayName);
+                if (effectColumn != null) {
+                    try {
+                        db.setSingleEffect(p.getUniqueId().toString(), effectColumn);
+                        p.sendMessage("Effect " + displayName + " enabled!");
+                        openGui(p);
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                        p.sendMessage("An error occurred while updating the effect.");
+                    }
                 }
             }
         }
     }
-    public void notUnlocked(Player p, int slot, String name) {
-        Inventory inv = p.getOpenInventory().getTopInventory();
-        ItemStack notunlocked = createItem(Material.RED_DYE, name , List.of("&cLOCKED"));
-        inv.setItem(slot, notunlocked);
+
+    private String getEffectColumnByName(String name) {
+        return switch (name) {
+            case "&6Totem Effect" -> "totem_enabled";
+            case "&cBleed Effect" -> "bleed_enabled";
+            case "&4Rage Effect" -> "rage_enabled";
+            case "&dLove Effect" -> "love_enabled";
+            case "&fSword Effect" -> "sword_enabled";
+            default -> null;
+        };
     }
 
-
+    private void notUnlocked(Player p, int slot, String name) {
+        Inventory inv = p.getOpenInventory().getTopInventory();
+        ItemStack notunlocked = createItem(Material.RED_DYE, name, List.of("&cLOCKED"));
+        inv.setItem(slot, notunlocked);
+    }
 
     private ItemStack createItem(Material material, String name, List<String> lore) {
         ItemStack itemStack = new ItemStack(material);

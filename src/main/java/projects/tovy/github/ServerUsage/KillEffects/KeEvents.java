@@ -5,7 +5,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.entity.Player;
 import projects.tovy.github.DataBase.KEDataBase;
-import projects.tovy.github.ServerUsage.KillEffects.Effects;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,7 +12,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class KeEvents implements Listener {
-
     private final KEDataBase keDataBase;
     private final Effects effects;
 
@@ -35,10 +33,11 @@ public class KeEvents implements Listener {
                 boolean bleedEnabled = rs.getBoolean("bleed_enabled");
                 boolean rageEnabled = rs.getBoolean("rage_enabled");
                 boolean loveEnabled = rs.getBoolean("love_enabled");
+                boolean swordEnabled = rs.getBoolean("sword_enabled");
 
                 // Play corresponding effects based on enabled effects
                 if (totemEnabled) {
-                    effects.totemEffect(player.getLocation(), player.getLocation()); // For simplicity, attacker and death locations are same
+                    effects.totemEffect(player.getLocation(), player.getLocation());
                 }
                 if (bleedEnabled) {
                     effects.bleedEffect(player.getLocation(), player.getLocation());
@@ -48,6 +47,9 @@ public class KeEvents implements Listener {
                 }
                 if (loveEnabled) {
                     effects.loveEffect(player.getLocation(), player.getLocation());
+                }
+                if (swordEnabled) {
+                    effects.swordEffect(player.getLocation(), player.getLocation());
                 }
             }
         } catch (SQLException e) {

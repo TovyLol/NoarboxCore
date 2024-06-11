@@ -5,6 +5,7 @@ import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -21,7 +22,10 @@ import projects.tovy.github.PlayerUsage.Warps.WarpManager;
 import projects.tovy.github.ServerUsage.Chat.ChatFilter;
 import projects.tovy.github.ServerUsage.Chat.DeathMessages;
 import projects.tovy.github.ServerUsage.Chat.JoinMessages;
+import projects.tovy.github.ServerUsage.KillEffects.Effects;
 import projects.tovy.github.ServerUsage.KillEffects.GUI;
+import projects.tovy.github.ServerUsage.KillEffects.KeEvents;
+import projects.tovy.github.ServerUsage.KillEffects.KeMain;
 import projects.tovy.github.ServerUsage.Shops.GetShops;
 import projects.tovy.github.ServerUsage.Shops.ShopsMain;
 
@@ -48,6 +52,7 @@ public final class Main extends JavaPlugin {
         dbManager.getKEDatabase().createTable();
 
         dsMain = new DsMain();
+        border = new EasyGuiBorder();
 
         loadCommands();
         loadEvents();
@@ -67,6 +72,9 @@ public final class Main extends JavaPlugin {
                 "██╔══██╗░░╚██╔╝░░  ░░░██║░░░██║░░██║░╚████╔╝░░░╚██╔╝░░\n" +
                 "██████╦╝░░░██║░░░  ░░░██║░░░╚█████╔╝░░╚██╔╝░░░░░██║░░░\n" +
                 "╚═════╝░░░░╚═╝░░░  ░░░╚═╝░░░░╚════╝░░░░╚═╝░░░░░░╚═╝░░░");
+
+        // Register Kill Effects events
+        getServer().getPluginManager().registerEvents(new KeEvents(dbManager.getKEDatabase(), new Effects(new KeMain(new ItemHandeling(Material.DIAMOND), border, this, dbManager.getKEDatabase()), this)), this);
     }
 
     public static Main getInstance() {
@@ -83,7 +91,6 @@ public final class Main extends JavaPlugin {
         getCommand("warp").setExecutor(new WarpCMD(this, warpManager));
         getCommand("togglestash").setExecutor(new StashCommand(dsMain, cnfg, this));
         getCommand("killeffects").setExecutor(new GUI(border, dbManager.getKEDatabase()));
-
     }
 
     private void loadEvents() {
@@ -114,8 +121,9 @@ public final class Main extends JavaPlugin {
             }
         }
     }
+
     public void sendTitle(Player p, String title, String subtitle) {
-        p.sendTitle(title, subtitle, 20 ,20, 20);
+        p.sendTitle(title, subtitle, 20, 20, 20);
     }
 
     public void tpToSpawn(Player player) {
@@ -146,7 +154,6 @@ public final class Main extends JavaPlugin {
         }
         return false;
     }
-
 
     @Override
     public void onDisable() {
