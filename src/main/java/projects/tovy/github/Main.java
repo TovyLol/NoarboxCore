@@ -42,7 +42,7 @@ public final class Main extends JavaPlugin {
     private EasyGuiBorder border;
     private KeMain killeffects;
     private ModeMain modeMain;
-
+    private Effects effects;
     @Override
     public void onEnable() {
         instance = this;
@@ -107,7 +107,7 @@ public final class Main extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new ShopsMain(get), this);
         getServer().getPluginManager().registerEvents(new DsEvents(this, dbManager.getDsDataBase(), cnfg, item), this);
         getServer().getPluginManager().registerEvents(new GUI(border, dbManager.getKEDatabase()), this);
-        getServer().getPluginManager().registerEvents(new KeEvents(dbManager.getKEDatabase(), killeffects.getEffects()), this);
+        getServer().getPluginManager().registerEvents(new KeEvents(dbManager.getKEDatabase(), effects), this);
         getServer().getPluginManager().registerEvents(new ModeEvents(modeMain, this), this);
     }
 

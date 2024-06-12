@@ -98,7 +98,7 @@ public class GUI implements CommandExecutor, Listener {
                         openGui(p);
                     } catch (SQLException e) {
                         e.printStackTrace();
-                        p.sendMessage("An error occurred while updating the effect.");
+                        p.sendMessage(ChatColor.RED + "You do not have this unlocked!");
                     }
                 }
             }
