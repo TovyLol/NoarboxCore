@@ -13,6 +13,7 @@ import org.bukkit.inventory.ItemStack;
 import projects.tovy.github.DataBase.KEDataBase;
 import projects.tovy.github.EasyGuiBorder;
 import projects.tovy.github.ItemHandeling;
+import org.bukkit.ChatColor;
 
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -40,38 +41,44 @@ public class GUI implements CommandExecutor, Listener {
     public void openGui(Player p) {
         boolean canAccessAll = p.hasPermission("Noarbox.gui.all") || p.getName().equalsIgnoreCase("2b2t base alt");
 
-        String renl = "&6Right Click to enable";
+        ChatColor gold = ChatColor.GOLD;
+        ChatColor red = ChatColor.RED;
+        ChatColor darkRed = ChatColor.DARK_RED;
+        ChatColor lightPurple = ChatColor.LIGHT_PURPLE;
+        ChatColor white = ChatColor.WHITE;
+
+        String renl = gold + "Right Click to enable";
         Inventory inv = border.openGuiBorder(p, 54, "Kill Effects");
 
         if (canAccessAll || p.hasPermission("Noarbox.gui.totem")) {
-            ItemStack totemEffectItem = createItem(Material.TOTEM_OF_UNDYING, "&6Totem Effect", Arrays.asList("&fA unique Effect upon killing someone!", renl));
+            ItemStack totemEffectItem = createItem(Material.TOTEM_OF_UNDYING, gold + "Totem Effect", Arrays.asList(white + "A unique Effect upon killing someone!", renl));
             inv.setItem(1, totemEffectItem);
         } else {
-            notUnlocked(p, 1, "&6Totem Effect");
+            notUnlocked(p, 1, gold + "Totem Effect");
         }
         if (canAccessAll || p.hasPermission("Noarbox.gui.bleed")) {
-            ItemStack bleedEffectItem = createItem(Material.LAVA_BUCKET, "&cBleed Effect", Arrays.asList("&fA unique Effect upon killing someone!", renl));
+            ItemStack bleedEffectItem = createItem(Material.LAVA_BUCKET, red + "Bleed Effect", Arrays.asList(white + "A unique Effect upon killing someone!", renl));
             inv.setItem(2, bleedEffectItem);
         } else {
-            notUnlocked(p, 2, "&cBleed Effect");
+            notUnlocked(p, 2, red + "Bleed Effect");
         }
         if (canAccessAll || p.hasPermission("Noarbox.gui.rage")) {
-            ItemStack rageEffectItem = createItem(Material.POLAR_BEAR_SPAWN_EGG, "&4Rage Effect", Arrays.asList("&fA unique Effect upon killing someone!", renl));
+            ItemStack rageEffectItem = createItem(Material.POLAR_BEAR_SPAWN_EGG, darkRed + "Rage Effect", Arrays.asList(white + "A unique Effect upon killing someone!", renl));
             inv.setItem(3, rageEffectItem);
         } else {
-            notUnlocked(p, 3, "&4Rage Effect");
+            notUnlocked(p, 3, darkRed + "Rage Effect");
         }
         if (canAccessAll || p.hasPermission("Noarbox.gui.love")) {
-            ItemStack loveEffectItem = createItem(Material.HEART_OF_THE_SEA, "&dLove Effect", Arrays.asList("&fA unique Effect upon killing someone!", renl));
+            ItemStack loveEffectItem = createItem(Material.HEART_OF_THE_SEA, lightPurple + "Love Effect", Arrays.asList(white + "A unique Effect upon killing someone!", renl));
             inv.setItem(4, loveEffectItem);
         } else {
-            notUnlocked(p, 4, "&dLove Effect");
+            notUnlocked(p, 4, lightPurple + "Love Effect");
         }
         if (canAccessAll || p.hasPermission("Noarbox.gui.sword")) {
-            ItemStack swordEffectItem = createItem(Material.IRON_SWORD, "&fSword Effect", Arrays.asList("&fA unique Effect upon killing someone!", renl));
+            ItemStack swordEffectItem = createItem(Material.IRON_SWORD, white + "Sword Effect", Arrays.asList(white + "A unique Effect upon killing someone!", renl));
             inv.setItem(5, swordEffectItem);
         } else {
-            notUnlocked(p, 5, "&fSword Effect");
+            notUnlocked(p, 5, white + "Sword Effect");
         }
     }
 
@@ -87,7 +94,7 @@ public class GUI implements CommandExecutor, Listener {
                 if (effectColumn != null) {
                     try {
                         db.setSingleEffect(p.getUniqueId().toString(), effectColumn);
-                        p.sendMessage("Effect " + displayName + " enabled!");
+                        p.sendMessage("Effect " + ChatColor.stripColor(displayName) + " enabled!");
                         openGui(p);
                     } catch (SQLException e) {
                         e.printStackTrace();
@@ -99,16 +106,16 @@ public class GUI implements CommandExecutor, Listener {
     }
 
     private String getEffectColumnByName(String name) {
-        switch (name) {
-            case "&6Totem Effect":
+        switch (ChatColor.stripColor(name)) {
+            case "Totem Effect":
                 return "totem_enabled";
-            case "&cBleed Effect":
+            case "Bleed Effect":
                 return "bleed_enabled";
-            case "&4Rage Effect":
+            case "Rage Effect":
                 return "rage_enabled";
-            case "&dLove Effect":
+            case "Love Effect":
                 return "love_enabled";
-            case "&fSword Effect":
+            case "Sword Effect":
                 return "sword_enabled";
             default:
                 return null;
@@ -117,7 +124,7 @@ public class GUI implements CommandExecutor, Listener {
 
     private void notUnlocked(Player p, int slot, String name) {
         Inventory inv = p.getOpenInventory().getTopInventory();
-        ItemStack notunlocked = createItem(Material.RED_DYE, name, Arrays.asList("&cLOCKED"));
+        ItemStack notunlocked = createItem(Material.RED_DYE, name, Arrays.asList(ChatColor.RED + "LOCKED"));
         inv.setItem(slot, notunlocked);
     }
 

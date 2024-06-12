@@ -11,9 +11,11 @@ commands:
  warp:
 
  killeffects:
-
-
-
+ togglestash:
+ staffmode:
+   permission: noarbox.staff.mode
+   description: "Work of art"
+   aliases: sm
 
 
 

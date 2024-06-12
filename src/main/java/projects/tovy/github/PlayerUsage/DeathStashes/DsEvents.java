@@ -1,6 +1,7 @@
 package projects.tovy.github.PlayerUsage.DeathStashes;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -57,7 +58,7 @@ public class DsEvents implements Listener {
         if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             Player p = event.getPlayer();
             ItemStack item = p.getInventory().getItemInMainHand();
-            if (item != null && item.hasItemMeta() && item.getItemMeta().getDisplayName().contains("§cDeath Stash")) {
+            if (item != null && item.hasItemMeta() && item.getItemMeta().getDisplayName().contains(ChatColor.RED + "Death Stash")) {
                 event.setCancelled(true);
                 handleStashInteraction(p, item);
             }
@@ -66,7 +67,7 @@ public class DsEvents implements Listener {
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
-        if (event.getView().getTitle().contains("§cDeath Stash")) {
+        if (event.getView().getTitle().contains(ChatColor.RED + "Death Stash")) {
             event.setCancelled(true);
         }
     }
@@ -80,8 +81,11 @@ public class DsEvents implements Listener {
 
         ItemStack stashItem = new ItemStack(Material.CHEST);
         ItemMeta meta = stashItem.getItemMeta();
-        meta.setDisplayName("§cDeath Stash: " + victim.getName());
-        meta.setLore(List.of("§7This death stash isn't expired yet!", "§7Right-Click to claim the items", "§7Shift Right-Click to preview the items"));
+        meta.setDisplayName(ChatColor.RED + "Death Stash: " + victim.getName());
+        meta.setLore(List.of(
+                ChatColor.GRAY + "This death stash isn't expired yet!",
+                ChatColor.GRAY + "Right-Click to claim the items",
+                ChatColor.GRAY + "Shift Right-Click to preview the items"));
         stashItem.setItemMeta(meta);
         // Drop the stash item
         Location deathLocation = victim.getLocation();
@@ -109,13 +113,12 @@ public class DsEvents implements Listener {
                         dsdb.removeStash(playerUUID.toString());
                     }
                 } else {
-                    p.sendMessage(cnfg.getString("prefix") + "&fThis Stash has been expired");
-                    p.sendMessage("&c&lNote: &fStashes expire after 2 days!");
+                    p.sendMessage(ChatColor.translateAlternateColorCodes('&', cnfg.getString("prefix") + "&fThis Stash has been expired"));
+                    p.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "Note: " + ChatColor.RESET + "Stashes expire after 2 days!");
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
-
         } finally {
             try {
                 if (statement != null) {
@@ -126,13 +129,12 @@ public class DsEvents implements Listener {
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
-
             }
         }
     }
 
     private void openStashPreview(Player p, byte[] stashData) {
-        Inventory stashPreview = Bukkit.createInventory(null, 54, "§cDeath Stash Preview");
+        Inventory stashPreview = Bukkit.createInventory(null, 54, ChatColor.RED + "Death Stash Preview");
         ItemStack[] items = deserializeInventory(stashData);
         for (int i = 0; i < items.length; i++) {
             if (items[i] != null) {
@@ -149,7 +151,7 @@ public class DsEvents implements Listener {
                 p.getInventory().addItem(item);
             }
         }
-        p.sendMessage("§aYou have claimed your death stash!");
+        p.sendMessage(ChatColor.GREEN + "You have claimed your death stash!");
     }
 
     private byte[] serializeInventory(ItemStack[] items) {
@@ -159,7 +161,7 @@ public class DsEvents implements Listener {
             return baos.toByteArray();
         } catch (IOException e) {
             e.printStackTrace();
-            // Handle the IOException as needed
+
         }
         return new byte[0];
     }

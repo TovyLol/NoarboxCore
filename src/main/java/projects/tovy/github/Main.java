@@ -3,18 +3,20 @@ package projects.tovy.github;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import projects.tovy.github.Administration.Staff.Mode.ModeCommands;
+import projects.tovy.github.Administration.Staff.Mode.ModeEvents;
+import projects.tovy.github.Administration.Staff.Mode.ModeMain;
 import projects.tovy.github.DataBase.DatabaseManager;
 import projects.tovy.github.PlayerUsage.DeathStashes.DsEvents;
 import projects.tovy.github.PlayerUsage.DeathStashes.DsMain;
 import projects.tovy.github.PlayerUsage.DeathStashes.StashCommand;
 import projects.tovy.github.PlayerUsage.ShulkerRooms.ShulkerCommands;
+import projects.tovy.github.PlayerUsage.ShulkerRooms.ShulkerEvents;
 import projects.tovy.github.PlayerUsage.ShulkerRooms.ShulkerListener;
 import projects.tovy.github.PlayerUsage.ShulkerRooms.ShulkerManagement;
 import projects.tovy.github.PlayerUsage.Warps.WarpCMD;
@@ -38,6 +40,8 @@ public final class Main extends JavaPlugin {
     private FileConfiguration cnfg;
     private ItemHandeling item;
     private EasyGuiBorder border;
+    private KeMain killeffects;
+    private ModeMain modeMain;
 
     @Override
     public void onEnable() {
@@ -91,15 +95,20 @@ public final class Main extends JavaPlugin {
         getCommand("warp").setExecutor(new WarpCMD(this, warpManager));
         getCommand("togglestash").setExecutor(new StashCommand(dsMain, cnfg, this));
         getCommand("killeffects").setExecutor(new GUI(border, dbManager.getKEDatabase()));
+        getCommand("staffmode").setExecutor(new ModeCommands());
     }
 
     private void loadEvents() {
         getServer().getPluginManager().registerEvents(new ShulkerListener(this, cnfg, sm), this);
+        getServer().getPluginManager().registerEvents(new ShulkerEvents(this, cnfg, new ShulkerManagement(dbManager.getShulkerDataBase())), this);
         getServer().getPluginManager().registerEvents(new DeathMessages(), this);
         getServer().getPluginManager().registerEvents(new JoinMessages(), this);
         getServer().getPluginManager().registerEvents(new ChatFilter(this), this);
         getServer().getPluginManager().registerEvents(new ShopsMain(get), this);
         getServer().getPluginManager().registerEvents(new DsEvents(this, dbManager.getDsDataBase(), cnfg, item), this);
+        getServer().getPluginManager().registerEvents(new GUI(border, dbManager.getKEDatabase()), this);
+        getServer().getPluginManager().registerEvents(new KeEvents(dbManager.getKEDatabase(), killeffects.getEffects()), this);
+        getServer().getPluginManager().registerEvents(new ModeEvents(modeMain, this), this);
     }
 
     public void noPermission(CommandSender sender) {
@@ -118,6 +127,7 @@ public final class Main extends JavaPlugin {
         for (Player online : Bukkit.getOnlinePlayers()) {
             if (online.hasPermission(perms)) {
                 player.sendMessage(cnfg.getString("prefix") + message);
+                player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1);
             }
         }
     }
@@ -143,6 +153,7 @@ public final class Main extends JavaPlugin {
             }
         } else {
             getLogger().warning("Spawn coordinates are not configured.");
+
         }
     }
 

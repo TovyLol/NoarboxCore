@@ -5,8 +5,8 @@
 #  ██╔══██╗██╔══██║░╚═══██╗██║██║░░██╗  ░╚═══██╗░░░██║░░░██║░░░██║██╔══╝░░██╔══╝░░
 #  ██████╦╝██║░░██║██████╔╝██║╚█████╔╝  ██████╔╝░░░██║░░░╚██████╔╝██║░░░░░██║░░░░░
 #  ╚═════╝░╚═╝░░╚═╝╚═════╝░╚═╝░╚════╝░  ╚═════╝░░░░╚═╝░░░░╚═════╝░╚═╝░░░░░╚═╝░░░░░
-prefix: "&9&lNoarbox |"
-errormsg: "&4&lERROR &fSomething undefined occured"
+prefix: "ChatColor.BLUE + \"Noarbox |\" + ChatColor.WHITE"
+errormsg: "ChatColor.RED + 'ERROR ' + ChatColor.WHITE + 'Something of undefined occured.'"
 
 
 

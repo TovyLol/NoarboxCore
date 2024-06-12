@@ -1,5 +1,6 @@
 package projects.tovy.github.PlayerUsage.DeathStashes;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -12,8 +13,8 @@ import java.util.UUID;
 
 public class StashCommand implements CommandExecutor {
     private final DsMain dsMain;
-    private FileConfiguration cnfg;
-    private Main main;
+    private final FileConfiguration cnfg;
+    private final Main main;
 
     public StashCommand(DsMain dsMain, FileConfiguration cnfg, Main main) {
         this.dsMain = dsMain;
@@ -28,12 +29,12 @@ public class StashCommand implements CommandExecutor {
             UUID playerUUID = p.getUniqueId();
             boolean enabled = dsMain.isStashEnabled(playerUUID);
             dsMain.setStashEnabled(playerUUID, !enabled);
-            p.sendMessage(cnfg.getString("prefix") +"&fDeath stash has been " + (enabled ? "disabled" : "enabled") + ".");
-            main.sendTitle(p, "&cWarning", "&cThis reverts after a restart.");
-            p.playSound(p, Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
+            String message = cnfg.getString("prefix") + "&fDeath stash has been " + (enabled ? "disabled" : "enabled") + ".";
+            p.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
+            main.sendTitle(p, ChatColor.RED + "Warning", ChatColor.RED + "This reverts after a restart.");
+            p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
             return true;
         }
         return false;
     }
-
 }
