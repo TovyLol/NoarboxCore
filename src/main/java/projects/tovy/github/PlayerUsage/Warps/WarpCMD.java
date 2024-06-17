@@ -1,14 +1,27 @@
 package projects.tovy.github.PlayerUsage.Warps;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.event.Listener;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import projects.tovy.github.ItemHandeling;
 import projects.tovy.github.Main;
 
-public class WarpCMD implements CommandExecutor {
+import java.util.ArrayList;
+import java.util.List;
+
+public class WarpCMD implements CommandExecutor, Listener {
     private final WarpManager warpManager;
     private final FileConfiguration config;
     private final String p;
@@ -21,6 +34,7 @@ public class WarpCMD implements CommandExecutor {
         this.error = config.getString("errormsg");
         this.main = main;
         this.warpManager = warpManager;
+        Bukkit.getPluginManager().registerEvents(this, main);
     }
 
     @Override
@@ -34,18 +48,10 @@ public class WarpCMD implements CommandExecutor {
 
         if (command.getName().equalsIgnoreCase("warp")) {
             if (args.length == 0) {
-                if (pl.hasPermission("noarbox.operator.usage")) {
-                    pl.sendMessage(p + ChatColor.WHITE + "Use /warp <name>");
-                } else {
-                    main.noPermission(sender);
-                }
+                openWarpGui(pl);
             } else if (args.length == 1) {
                 if (args[0].equalsIgnoreCase("list")) {
-                    if (pl.hasPermission("noarbox.operator.usage")) {
-                        warpManager.listWarps(pl);
-                    } else {
-                        main.noPermission(sender);
-                    }
+                    openWarpGui(pl);
                 } else {
                     if (warpManager.warpExists(args[0])) {
                         if (pl.hasPermission("noarbox.operator.usage")) {
@@ -85,5 +91,65 @@ public class WarpCMD implements CommandExecutor {
             }
         }
         return true;
+    }
+
+    private void openWarpGui(Player player) {
+        List<WarpManager.WarpStatus> warpStatuses = warpManager.getWarpsWithStatus(player);
+        Inventory gui = Bukkit.createInventory(null, 54, "Warps");
+
+        for (WarpManager.WarpStatus warpStatus : warpStatuses) {
+            ItemStack item;
+            if (warpStatus.isUnlocked()) {
+                item = new ItemStack(Material.GREEN_DYE);
+                ItemMeta meta = item.getItemMeta();
+                if (meta != null) {
+                    meta.setDisplayName(ChatColor.GREEN + warpStatus.getWarp().getName());
+                    ArrayList<String> lore = new ArrayList<String>();
+                    lore.add("");
+                    lore.add(ChatColor.YELLOW + "Right click to warp");
+                    meta.setLore(lore);
+                    item.setItemMeta(meta);
+                }
+            } else {
+                item = new ItemStack(Material.RED_DYE);
+                ItemMeta meta = item.getItemMeta();
+                if (meta != null) {
+                    meta.setDisplayName(ChatColor.RED + warpStatus.getWarp().getName());
+                    ArrayList<String> lore = new ArrayList<String>();
+                    lore.add("");
+                    lore.add(ChatColor.DARK_RED + "LOCKED");
+                    meta.setLore(lore);
+                    item.setItemMeta(meta);
+                }
+            }
+            gui.addItem(item);
+        }
+
+        player.openInventory(gui);
+    }
+
+    @EventHandler
+    public void onInventoryClick(InventoryClickEvent event) {
+        if (!(event.getWhoClicked() instanceof Player)) return;
+        Player p = (Player) event.getWhoClicked();
+
+        if (event.getView().getTitle().equals("Warps")) {
+            event.setCancelled(true);
+            ItemStack clickedItem = event.getCurrentItem();
+
+            if (clickedItem == null || !clickedItem.hasItemMeta()) return;
+
+            String warpName = ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName());
+            if (warpManager.warpExists(warpName)) {
+                warpManager.teleportToWarp(p, warpName);
+                p.playSound(p.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1, 1);
+                p.sendMessage(config.getString("prefix") + ChatColor.WHITE + " Warped to " + warpName);
+                p.closeInventory();
+            } else {
+                main.errorMessage(p);
+                p.closeInventory();
+                p.playSound(p.getLocation(), Sound.ENTITY_WITHER_DEATH, 1, 1);
+            }
+        }
     }
 }

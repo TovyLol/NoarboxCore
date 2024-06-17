@@ -41,14 +41,14 @@ public class DeathMessages implements Listener {
         public String formatDeathMessage(Player player) {
             switch (this) {
                 case KINETIC_ENERGY:
-                    return ChatColor.GOLD + player.getName() + ChatColor.RED + " didn't see the wall coming";
+                    return ChatColor.GOLD + player.getName() + ChatColor.RED + " is a high tier 1 wall!(skill issue)";
                 case KINETIC_ENERGY_ESCAPE:
                     String attackerName = player.getKiller() != null ? player.getKiller().getName() : "Unknown";
                     return ChatColor.GOLD + player.getName() + ChatColor.RED + " didn't see the wall coming whilst trying to kill " + ChatColor.GOLD + attackerName;
                 case SLAIN_BY:
                     Player killer = player.getKiller();
                     ItemStack usedItem = killer != null ? killer.getInventory().getItemInMainHand() : new ItemStack(Material.AIR);
-                    String itemName = usedItem.getType().toString();
+                    String itemName = usedItem.getItemMeta().getDisplayName();
                     return ChatColor.GOLD + player.getName() + ChatColor.RED + " lost to " + ChatColor.GOLD + killer.getName() + ChatColor.RED + " using " + ChatColor.GOLD + itemName;
                 case UNKNOWN:
                 default:

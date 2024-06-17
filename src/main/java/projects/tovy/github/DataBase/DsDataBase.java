@@ -4,7 +4,7 @@ import java.sql.*;
 
 public class DsDataBase {
 
-    private static final String DB_URL = "jdbc:sqlite:warps.db";
+    private static final String DB_URL = "jdbc:sqlite:deathstashes.db";
 
     public Connection getConnection() throws SQLException {
         return DriverManager.getConnection(DB_URL);

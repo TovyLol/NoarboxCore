@@ -23,9 +23,14 @@ public class KeEvents implements Listener {
     @EventHandler
     public void onDeath(PlayerDeathEvent event) {
         Player player = event.getEntity();
+        Player killer = player.getKiller();
+        if (killer == null) {
+            return;
+        }
+
         try (Connection conn = keDataBase.getConnection()) {
             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM player_effects WHERE player_uuid = ?");
-            stmt.setString(1, player.getUniqueId().toString());
+            stmt.setString(1, killer.getUniqueId().toString()); // changed to uuid bc i liked it :3
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
@@ -35,21 +40,20 @@ public class KeEvents implements Listener {
                 boolean loveEnabled = rs.getBoolean("love_enabled");
                 boolean swordEnabled = rs.getBoolean("sword_enabled");
 
-                // Play corresponding effects based on enabled effects
                 if (totemEnabled) {
-                    effects.totemEffect(player.getLocation(), player.getLocation());
+                    effects.totemEffect(killer.getLocation(), player.getLocation());
                 }
                 if (bleedEnabled) {
-                    effects.bleedEffect(player.getLocation(), player.getLocation());
+                    effects.bleedEffect(killer.getLocation(), player.getLocation());
                 }
                 if (rageEnabled) {
-                    effects.rageEffect(player.getLocation(), player.getLocation());
+                    effects.rageEffect(killer.getLocation(), player.getLocation());
                 }
                 if (loveEnabled) {
-                    effects.loveEffect(player.getLocation(), player.getLocation());
+                    effects.loveEffect(killer.getLocation(), player.getLocation());
                 }
                 if (swordEnabled) {
-                    effects.swordEffect(player.getLocation(), player.getLocation());
+                    effects.swordEffect(killer.getLocation(), player.getLocation());
                 }
             }
         } catch (SQLException e) {

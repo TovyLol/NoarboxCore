@@ -45,32 +45,30 @@ public class ModeEvents implements Listener {
             e.setCancelled(true);
         }
     }
-
-    @EventHandler
-    public void onCommand(PlayerCommandPreprocessEvent e) {
-        Player p = e.getPlayer();
-        if (p.hasPermission("noarbox.staff.mode") || mmain.getCommands().isEnabled(p)) {
-            if (e.getMessage().contains("/staffmode") || e.getMessage().contains("/sm")) {
-                // Command logic here (if any)
-            }
-        }
-    }
-
     @EventHandler
     public void onDisconnect(PlayerQuitEvent e) {
         Player p = e.getPlayer();
-        // Handle player disconnect (if needed)
+        main.sendToPermission(ChatColor.BOLD.RED + "WARNING" + ChatColor.WHITE + p + " Logged in while in staff mode, Investigate", "noarbox.operator.usage", p);
+
     }
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
-        // Handle player join (if needed)
+        if (mmain.getCommands().isEnabled(p)) {
+            main.sendToPermission(ChatColor.BOLD.RED + "WARNING" + ChatColor.WHITE + p + " Logged in while in staff mode, Investigate", "noarbox.operator.usage", p);
+            main.sendTitle(p, ChatColor.BOLD.RED + "Warning", ChatColor.WHITE + "You logged in whilst in staff mode, operators are notified");
+            main.playWarningSound(p, p.getLocation());
+        }
     }
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
-        playerRespawnFlag.put(event.getEntity().getUniqueId(), true);
+        Player p = event.getEntity();
+        if (mmain.getCommands().isEnabled(p)) {
+            playerRespawnFlag.put(event.getEntity().getUniqueId(), true);
+        }
+
     }
 
     @EventHandler
@@ -78,6 +76,8 @@ public class ModeEvents implements Listener {
         UUID playerId = event.getPlayer().getUniqueId();
         if (playerRespawnFlag.getOrDefault(playerId, false)) {
             Player p = event.getPlayer();
+            main.sendToPermission(ChatColor.BOLD.RED + "WARNING" + ChatColor.WHITE + p + " Died in while in staff mode, Investigate", "noarbox.operator.usage", p);
+            main.playWarningSound(p, p.getLocation());
             main.sendTitle(p, ChatColor.RED + "Warning", ChatColor.RED + "You died in Staffmode, Staffmode got turned off");
             playerRespawnFlag.put(playerId, false);
             mmain.getCommands().setEnabled(p, false);

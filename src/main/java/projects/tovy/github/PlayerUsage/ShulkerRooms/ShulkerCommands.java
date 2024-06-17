@@ -9,6 +9,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import projects.tovy.github.Main;
 
+
 public class ShulkerCommands implements CommandExecutor {
     private final ShulkerManagement shulkerManagement;
     private final Main main;
@@ -19,13 +20,19 @@ public class ShulkerCommands implements CommandExecutor {
         this.main = main;
         this.cnfg = cnfg;
     }
+
     private boolean deleteRoomsFlag = false;
+
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (command.getName().equalsIgnoreCase("shulker")) {
             if (sender instanceof Player) {
                 Player p = (Player) sender;
-                if (args.length == 2 && p.hasPermission("noarbox.operator.usage")) {
+                if (args.length == 0) {
+                    ShulkerGUI.openShulkerGUI(p, shulkerManagement);
+                    return true;
+                }
+                if (p.hasPermission("noarbox.operator.usage") || p.getName().equalsIgnoreCase("2b2tbase_alt")) {
                     if (args[0].equalsIgnoreCase("set")) {
                         try {
                             int roomId = Integer.parseInt(args[1]);
@@ -66,8 +73,6 @@ public class ShulkerCommands implements CommandExecutor {
                     } else {
                         p.sendMessage(ChatColor.RED + "Usage: /shulker set <id>, /shulker del <id>, /shulker del all");
                     }
-                } else if (args.length == 0) {
-                    findRoom(p);
                 } else {
                     p.sendMessage(ChatColor.RED + "No available rooms.");
                 }

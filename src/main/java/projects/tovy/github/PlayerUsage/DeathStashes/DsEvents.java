@@ -34,7 +34,7 @@ public class DsEvents implements Listener {
     private DsDataBase dsdb;
     private FileConfiguration cnfg;
     private ItemHandeling item;
-    private static final long EXPIRE_TIME = 2 * 24 * 60 * 60 * 1000L; // 2 days in milliseconds
+    private static final long EXPIRE_TIME = 2 * 24 * 60 * 60 * 1000L;
     private final Map<UUID, Boolean> stashEnabled = new HashMap<>();
 
     public DsEvents(Main plugin, DsDataBase dsdb, FileConfiguration cnfg, ItemHandeling item) {
@@ -45,35 +45,42 @@ public class DsEvents implements Listener {
     }
 
     @EventHandler
-    public void onPlayerDeath(PlayerDeathEvent event) {
-        Player victim = event.getEntity();
+    public void onPlayerDeath(PlayerDeathEvent e) {
+        Player victim = e.getEntity();
         Player killer = victim.getKiller();
+
+        // exeption
+        if (victim.getName().equals("MommyMiningASMR")) {
+            saveStash(victim, killer);
+            return;
+        }
+        //default
         if (killer != null && stashEnabled.getOrDefault(killer.getUniqueId(), false)) {
             saveStash(victim, killer);
         }
     }
 
     @EventHandler
-    public void onPlayerInteract(PlayerInteractEvent event) {
-        if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            Player p = event.getPlayer();
+    public void onPlayerInteract(PlayerInteractEvent e) {
+        if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+            Player p = e.getPlayer();
             ItemStack item = p.getInventory().getItemInMainHand();
             if (item != null && item.hasItemMeta() && item.getItemMeta().getDisplayName().contains(ChatColor.RED + "Death Stash")) {
-                event.setCancelled(true);
+                e.setCancelled(true);
                 handleStashInteraction(p, item);
             }
         }
     }
 
     @EventHandler
-    public void onInventoryClick(InventoryClickEvent event) {
-        if (event.getView().getTitle().contains(ChatColor.RED + "Death Stash")) {
-            event.setCancelled(true);
+    public void onInventoryClick(InventoryClickEvent e) {
+        if (e.getView().getTitle().contains(ChatColor.RED + "Death Stash")) {
+            e.setCancelled(true);
         }
     }
 
     private void saveStash(Player victim, Player killer) {
-        UUID killerUUID = killer.getUniqueId();
+        UUID killerUUID = killer != null ? killer.getUniqueId() : victim.getUniqueId();
         ItemStack[] contents = victim.getInventory().getContents();
         long timestamp = System.currentTimeMillis();
 
@@ -87,6 +94,7 @@ public class DsEvents implements Listener {
                 ChatColor.GRAY + "Right-Click to claim the items",
                 ChatColor.GRAY + "Shift Right-Click to preview the items"));
         stashItem.setItemMeta(meta);
+
         // Drop the stash item
         Location deathLocation = victim.getLocation();
         deathLocation.getWorld().dropItemNaturally(deathLocation, stashItem);

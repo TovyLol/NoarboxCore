@@ -111,7 +111,6 @@ public class GUI implements CommandExecutor, Listener {
         }
     }
 
-
     private String getEffectColumnByName(String name) {
         switch (ChatColor.stripColor(name)) {
             case "Totem Effect":

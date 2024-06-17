@@ -8,6 +8,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import projects.tovy.github.Administration.Staff.Logging.CommandLogging;
 import projects.tovy.github.Administration.Staff.Mode.ModeCommands;
 import projects.tovy.github.Administration.Staff.Mode.ModeEvents;
 import projects.tovy.github.Administration.Staff.Mode.ModeMain;
@@ -31,7 +32,23 @@ import projects.tovy.github.ServerUsage.KillEffects.KeMain;
 import projects.tovy.github.ServerUsage.Shops.GetShops;
 import projects.tovy.github.ServerUsage.Shops.ShopsMain;
 
+import java.io.DataOutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 public final class Main extends JavaPlugin {
+
+    /*
+    to do list:
+    - finish security in Administration/Staff/Logging
+    - test Killeffects
+    - test DeathStashes
+    - Fix Join and Leave message issue
+    - Fix ShulkerRoom Command (PRIO)
+    - Warp GUI
+    - StaffMode
+    - NameTags
+     */
     private static Main instance;
     private GetShops get;
     private ShulkerManagement sm;
@@ -62,23 +79,6 @@ public final class Main extends JavaPlugin {
         loadEvents();
 
         getLogger().info("T komt goed core is enabled");
-        getLogger().info("\n" +
-                "███╗░░██╗░█████╗░░█████╗░██████╗░██████╗░░█████╗░██╗░░██╗░█████╗░░█████╗░██████╗░███████╗\n" +
-                "████╗░██║██╔══██╗██╔══██╗██╔══██╗██╔══██╗██╔══██╗╚██╗██╔╝██╔══██╗██╔══██╗██╔══██╗██╔════╝\n" +
-                "██╔██╗██║██║░░██║███████║██████╔╝██████╦╝██║░░██║░╚███╔╝░██║░░╚═╝██║░░██║██████╔╝█████╗░░\n" +
-                "██║╚████║██║░░██║██╔══██║██╔══██╗██╔══██╗██║░░██║░██╔██╗░██║░░██╗██║░░██║██╔══██╗██╔══╝░░\n" +
-                "██║░╚███║╚█████╔╝██║░░██║██║░░██║██████╦╝╚█████╔╝██╔╝╚██╗╚█████╔╝╚█████╔╝██║░░██║███████╗\n" +
-                "╚═╝░░╚══╝░╚════╝░╚═╝░░╚═╝╚═╝░░╚═╝╚═════╝░░╚════╝░╚═╝░░╚═╝░╚════╝░░╚════╝░╚═╝░░╚═╝╚══════╝");
-        getLogger().info("\n" +
-                "██████╗░██╗░░░██╗  ████████╗░█████╗░██╗░░░██╗██╗░░░██╗\n" +
-                "██╔══██╗╚██╗░██╔╝  ╚══██╔══╝██╔══██╗██║░░░██║╚██╗░██╔╝\n" +
-                "██████╦╝░╚████╔╝░  ░░░██║░░░██║░░██║╚██╗░██╔╝░╚████╔╝░\n" +
-                "██╔══██╗░░╚██╔╝░░  ░░░██║░░░██║░░██║░╚████╔╝░░░╚██╔╝░░\n" +
-                "██████╦╝░░░██║░░░  ░░░██║░░░╚█████╔╝░░╚██╔╝░░░░░██║░░░\n" +
-                "╚═════╝░░░░╚═╝░░░  ░░░╚═╝░░░░╚════╝░░░░╚═╝░░░░░░╚═╝░░░");
-
-        // Register Kill Effects events
-        getServer().getPluginManager().registerEvents(new KeEvents(dbManager.getKEDatabase(), new Effects(new KeMain(new ItemHandeling(Material.DIAMOND), border, this, dbManager.getKEDatabase()), this)), this);
     }
 
     public static Main getInstance() {
@@ -109,6 +109,7 @@ public final class Main extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new GUI(border, dbManager.getKEDatabase()), this);
         getServer().getPluginManager().registerEvents(new KeEvents(dbManager.getKEDatabase(), effects), this);
         getServer().getPluginManager().registerEvents(new ModeEvents(modeMain, this), this);
+        getServer().getPluginManager().registerEvents(new CommandLogging(this, modeMain), this);
     }
 
     public void noPermission(CommandSender sender) {
@@ -127,7 +128,7 @@ public final class Main extends JavaPlugin {
         for (Player online : Bukkit.getOnlinePlayers()) {
             if (online.hasPermission(perms)) {
                 player.sendMessage(cnfg.getString("prefix") + message);
-                player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1);
+                player.playSound(player.getLocation(), Sound.ENTITY_WITHER_DEATH, 1, 1);
             }
         }
     }
@@ -164,6 +165,38 @@ public final class Main extends JavaPlugin {
             }
         }
         return false;
+    }
+    public void sendWebHook(String URL, String msg, String nameofwebhook, String title, String error) {
+
+        try {
+            URL url = new URL(URL);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-Type", "application/json");
+            conn.setDoOutput(true);
+
+
+            String payload = "{\"username\":\"" + title + "\",\"embeds\":[{\"title\":\"" + title + "\",\"description\":\"" + msg + "}]}";
+
+            DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
+            wr.writeBytes(payload);
+            wr.flush();
+            wr.close();
+
+            int responseCode = conn.getResponseCode();
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                getLogger().info(error);
+            } else {
+                getLogger().info("Failed to send webhook. Response Code: " + responseCode);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+    public void playWarningSound(Player p, Location location) {
+        p.playSound(location, Sound.ENTITY_WITHER_DEATH, 1, 1);
     }
 
     @Override
