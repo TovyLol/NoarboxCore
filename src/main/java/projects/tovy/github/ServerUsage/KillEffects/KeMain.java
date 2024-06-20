@@ -2,28 +2,25 @@ package projects.tovy.github.ServerUsage.KillEffects;
 
 import projects.tovy.github.DataBase.KEDataBase;
 import projects.tovy.github.EasyGuiBorder;
-import projects.tovy.github.ItemHandeling;
 import projects.tovy.github.Main;
 
 public class KeMain {
-    public ItemHandeling item;
-    public EasyGuiBorder border;
-    public Main main;
-    public KEDataBase ked;
+    private final Main main;
+    private final KEDataBase ked;
+    private final Effects effects;
+    private final GUI gui;
+    private final KeEvents keEvents;
 
-    public KeMain(ItemHandeling item, EasyGuiBorder border, Main main, KEDataBase ked) {
-        this.border = border;
-        this.item = item;
+    public KeMain(Main main, KEDataBase ked) {
         this.main = main;
         this.ked = ked;
+        this.effects = new Effects(this, main);
+        this.gui = new GUI(new EasyGuiBorder(), ked);
+        this.keEvents = new KeEvents(ked, effects);
     }
 
-    private final Effects eff = new Effects(this, main);
-    private final GUI gui = new GUI(border, ked);
-    private final KeEvents e = new KeEvents(ked, eff);
-
     public Effects getEffects() {
-        return eff;
+        return effects;
     }
 
     public GUI getGUI() {
@@ -31,6 +28,6 @@ public class KeMain {
     }
 
     public KeEvents getEvents() {
-        return e;
+        return keEvents;
     }
 }
