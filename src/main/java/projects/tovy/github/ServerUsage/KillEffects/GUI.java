@@ -97,10 +97,12 @@ public class GUI implements CommandExecutor, Listener {
                     try {
                         db.setSingleEffect(p.getUniqueId().toString(), effectColumn);
                         p.sendMessage("Effect " + ChatColor.stripColor(displayName) + " enabled!");
-                        openGui(p);
+                        p.closeInventory();
                     } catch (SQLException e) {
                         e.printStackTrace();
                         p.sendMessage(ChatColor.RED + "An error occurred while enabling the effect!");
+                        
+                        p.closeInventory();
                     }
                 } else {
                     p.sendMessage(ChatColor.RED + "Effect column not found!");

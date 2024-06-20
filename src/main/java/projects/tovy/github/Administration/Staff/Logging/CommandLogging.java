@@ -32,7 +32,7 @@ public class CommandLogging implements Listener {
                 String message = "";
 
                 if (command.equals("/sm") || command.equals("/staffmode")) {
-                    if (!mmain.getCommands().isEnabled(p)) {
+                    if (mmain != null && !mmain.getModeCommands().isEnabled(p)) {
                         title = "Staffmode Alert";
                         message = p.getName() + " went into Staffmode";
                     }
@@ -44,7 +44,6 @@ public class CommandLogging implements Listener {
                 } else if (command.equals("/gamemode creative")) {
                     title = "Gamemode Creative Alert";
                     message = p.getName() + " changed to Creative mode";
-                } else if (command.equals("/")){
                 }
 
                 if (!title.isEmpty() && !message.isEmpty()) {

@@ -37,7 +37,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public final class Main extends JavaPlugin {
-
     /*
     to do list:
     - finish security in Administration/Staff/Logging
@@ -45,10 +44,10 @@ public final class Main extends JavaPlugin {
     - test DeathStashes
     - Fix Join and Leave message issue
     - Fix ShulkerRoom Command (PRIO)
-    - Warp GUI
     - StaffMode
     - NameTags
-     */
+    */
+
     private static Main instance;
     private GetShops get;
     private ShulkerManagement sm;
@@ -60,24 +59,25 @@ public final class Main extends JavaPlugin {
     private KeMain killeffects;
     private ModeMain modeMain;
     private Effects effects;
+
     @Override
     public void onEnable() {
         instance = this;
         saveDefaultConfig();
         cnfg = getConfig();
-
         dbManager = new DatabaseManager();
         dbManager.getWarpDatabase().createTable();
+        sm = new ShulkerManagement(dbManager.getShulkerDataBase()); // Initialize sm
+        sm.loadRooms(); // Move this line after initializing sm
         dbManager.getShulkerDataBase().createTable();
         dbManager.getDsDataBase().createTable();
         dbManager.getKEDatabase().createTable();
-
+        dbManager.getKEDatabase().addSwordEnabledColumnIfMissing(); // Ensure column exists
         dsMain = new DsMain();
         border = new EasyGuiBorder();
-
+        modeMain = new ModeMain(this); // Pass the instance of Main to ModeMain
         loadCommands();
         loadEvents();
-
         getLogger().info("T komt goed core is enabled");
     }
 
@@ -100,7 +100,7 @@ public final class Main extends JavaPlugin {
 
     private void loadEvents() {
         getServer().getPluginManager().registerEvents(new ShulkerListener(this, cnfg, sm), this);
-        getServer().getPluginManager().registerEvents(new ShulkerEvents(this, cnfg, new ShulkerManagement(dbManager.getShulkerDataBase())), this);
+        getServer().getPluginManager().registerEvents(new ShulkerEvents(this, cnfg, sm), this);
         getServer().getPluginManager().registerEvents(new DeathMessages(), this);
         getServer().getPluginManager().registerEvents(new JoinMessages(), this);
         getServer().getPluginManager().registerEvents(new ChatFilter(this), this);
@@ -108,20 +108,24 @@ public final class Main extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new DsEvents(this, dbManager.getDsDataBase(), cnfg, item), this);
         getServer().getPluginManager().registerEvents(new GUI(border, dbManager.getKEDatabase()), this);
         getServer().getPluginManager().registerEvents(new KeEvents(dbManager.getKEDatabase(), effects), this);
-        getServer().getPluginManager().registerEvents(new ModeEvents(modeMain, this), this);
+
+        // Create an instance of ModeEvents and register its events
+        ModeEvents modeEvents = new ModeEvents(modeMain, this);
+        getServer().getPluginManager().registerEvents(modeEvents, this);
+
         getServer().getPluginManager().registerEvents(new CommandLogging(this, modeMain), this);
     }
 
     public void noPermission(CommandSender sender) {
         if (sender instanceof Player) {
-            sender.sendMessage("You don't have permission to use this command.");
+            sender.sendMessage(cnfg.getString("prefix") + ChatColor.WHITE + "You don't have permission to use this command.");
         } else {
-            sender.sendMessage("This command can only be used by players.");
+            sender.sendMessage(cnfg.getString("prefix") + ChatColor.WHITE + "This command can only be used by players.");
         }
     }
 
     public void errorMessage(CommandSender sender) {
-        sender.sendMessage("&cAn error occurred");
+        sender.sendMessage(cnfg.getString("prefix") + ChatColor.RED + "An error occured.");
     }
 
     public void sendToPermission(String message, String perms, Player player) {
@@ -145,16 +149,14 @@ public final class Main extends JavaPlugin {
                 int spawnx = Integer.parseInt(parts[0]);
                 int spawny = Integer.parseInt(parts[1]);
                 int spawnz = Integer.parseInt(parts[2]);
-
                 Location spawnLocation = new Location(player.getWorld(), spawnx, spawny, spawnz);
                 player.teleport(spawnLocation);
-                player.sendMessage(cnfg.getString("prefix") + "  &fYou got teleported to spawn");
+                player.sendMessage(cnfg.getString("prefix") + " &fYou got teleported to spawn");
             } else {
                 getLogger().warning("Spawn coordinates are invalid.");
             }
         } else {
             getLogger().warning("Spawn coordinates are not configured.");
-
         }
     }
 
@@ -166,24 +168,19 @@ public final class Main extends JavaPlugin {
         }
         return false;
     }
-    public void sendWebHook(String URL, String msg, String nameofwebhook, String title, String error) {
 
+    public void sendWebHook(String URL, String msg, String nameofwebhook, String title, String error) {
         try {
             URL url = new URL(URL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Content-Type", "application/json");
             conn.setDoOutput(true);
-
-
             String payload = "{\"username\":\"" + title + "\",\"embeds\":[{\"title\":\"" + title + "\",\"description\":\"" + msg + "}]}";
-
             DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
             wr.writeBytes(payload);
             wr.flush();
             wr.close();
-
             int responseCode = conn.getResponseCode();
             if (responseCode == HttpURLConnection.HTTP_OK) {
                 getLogger().info(error);
@@ -193,14 +190,15 @@ public final class Main extends JavaPlugin {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
+
     public void playWarningSound(Player p, Location location) {
         p.playSound(location, Sound.ENTITY_WITHER_DEATH, 1, 1);
     }
 
     @Override
     public void onDisable() {
+        sm.saveRooms();
         getLogger().info("'het komt wel goed trust the process' -tovy");
     }
 }
