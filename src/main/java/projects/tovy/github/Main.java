@@ -135,6 +135,7 @@ public final class Main extends JavaPlugin {
 
     public void sendTitle(Player p, String title, String subtitle) {
         p.sendTitle(title, subtitle, 20, 20, 20);
+
     }
 
     public void tpToSpawn(Player player) {
