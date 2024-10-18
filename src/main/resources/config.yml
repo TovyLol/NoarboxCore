@@ -5,7 +5,7 @@
 #  ██╔══██╗██╔══██║░╚═══██╗██║██║░░██╗  ░╚═══██╗░░░██║░░░██║░░░██║██╔══╝░░██╔══╝░░
 #  ██████╦╝██║░░██║██████╔╝██║╚█████╔╝  ██████╔╝░░░██║░░░╚██████╔╝██║░░░░░██║░░░░░
 #  ╚═════╝░╚═╝░░╚═╝╚═════╝░╚═╝░╚════╝░  ╚═════╝░░░░╚═╝░░░░╚═════╝░╚═╝░░░░░╚═╝░░░░░
-prefix: "ChatColor.BLUE + \"Noarbox |\" + ChatColor.WHITE"
+prefix: "ChatColor.BLUE + \"Noarbox |\" + ChatColor.WHITE "
 errormsg: "ChatColor.RED + 'ERROR ' + ChatColor.WHITE + 'Something of undefined occured.'"
 
 

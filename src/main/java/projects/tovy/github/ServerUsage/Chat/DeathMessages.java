@@ -7,7 +7,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
-
+import org.bukkit.inventory.meta.ItemMeta;
 
 public class DeathMessages implements Listener {
 
@@ -18,11 +18,13 @@ public class DeathMessages implements Listener {
         DeathCause cause = DeathCause.detectCause(deathMessage);
         event.setDeathMessage(cause.formatDeathMessage(player));
     }
+
     private enum DeathCause {
         KINETIC_ENERGY("experienced kinetic energy"),
         KINETIC_ENERGY_ESCAPE("experienced kinetic energy while trying to escape"),
         SLAIN_BY("was slain by"),
         UNKNOWN("lost in time");
+
         private final String message;
 
         DeathCause(String message) {
@@ -47,16 +49,23 @@ public class DeathMessages implements Listener {
                     return ChatColor.GOLD + player.getName() + ChatColor.RED + " didn't see the wall coming whilst trying to kill " + ChatColor.GOLD + attackerName;
                 case SLAIN_BY:
                     Player killer = player.getKiller();
-                    ItemStack usedItem = killer != null ? killer.getInventory().getItemInMainHand() : new ItemStack(Material.AIR);
-                    String itemName = usedItem.getItemMeta().getDisplayName();
-                    return ChatColor.GOLD + player.getName() + ChatColor.RED + " lost to " + ChatColor.GOLD + killer.getName() + ChatColor.RED + " using " + ChatColor.GOLD + itemName;
+                    if (killer != null) {
+                        ItemStack usedItem = killer.getInventory().getItemInMainHand();
+                        ItemMeta itemMeta = usedItem.getItemMeta();
+                        String itemName;
+                        if (itemMeta != null && itemMeta.hasDisplayName()) {
+                            itemName = itemMeta.getDisplayName();
+                        } else {
+                            itemName = usedItem.getType().toString();
+                        }
+                        return ChatColor.GOLD + player.getName() + ChatColor.RED + " lost to " + ChatColor.GOLD + killer.getName() + ChatColor.RED + " using " + ChatColor.GOLD + itemName;
+                    } else {
+                        return ChatColor.GOLD + player.getName() + ChatColor.RED + " was slain by an unknown entity";
+                    }
                 case UNKNOWN:
                 default:
                     return ChatColor.GOLD + player.getName() + ChatColor.RED + "'s death reason was lost in time help us to find it";
             }
-            //shit needs to be updated tho
-
         }
     }
-
 }

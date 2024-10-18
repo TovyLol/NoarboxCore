@@ -28,6 +28,18 @@ public class KEDataBase {
         }
     }
 
+    public void addSwordEnabledColumnIfMissing() {
+        try (Connection conn = getConnection();
+             PreparedStatement statement = conn.prepareStatement(
+                     "ALTER TABLE player_effects ADD COLUMN sword_enabled BOOLEAN")) {
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            if (!e.getMessage().contains("duplicate column name")) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public void setSingleEffect(String playerUUID, String columnName) throws SQLException {
         String disableAllSql = "UPDATE player_effects SET totem_enabled = FALSE, bleed_enabled = FALSE, " +
                 "rage_enabled = FALSE, love_enabled = FALSE, sword_enabled = FALSE WHERE player_uuid = ?";

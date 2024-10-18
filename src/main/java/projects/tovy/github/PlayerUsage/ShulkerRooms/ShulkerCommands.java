@@ -9,7 +9,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import projects.tovy.github.Main;
 
-
 public class ShulkerCommands implements CommandExecutor {
     private final ShulkerManagement shulkerManagement;
     private final Main main;
@@ -81,27 +80,5 @@ public class ShulkerCommands implements CommandExecutor {
             }
         }
         return true;
-    }
-
-    private int findAvailableRoom() {
-        for (int roomId : shulkerManagement.getAllRoomIds()) {
-            if (!shulkerManagement.isRoomOccupied(roomId)) {
-                return roomId;
-            }
-        }
-        return -1;
-    }
-
-    private void findRoom(Player p) {
-        int availableRoom = findAvailableRoom();
-        if (availableRoom != -1) {
-            p.teleport(shulkerManagement.getRoom(availableRoom));
-            p.sendMessage(ChatColor.BLUE + "You have been teleported to shulker room " + availableRoom);
-            shulkerManagement.setRoomOccupied(availableRoom, true);
-            main.sendToPermission(p.getName() + " went into a shulker room", "noarbox.operator.usage", p);
-        } else {
-            p.sendMessage(ChatColor.RED + "No available rooms.");
-            p.playSound(p.getLocation(), Sound.ENTITY_VILLAGER_NO, 2, 1);
-        }
     }
 }

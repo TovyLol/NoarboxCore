@@ -17,6 +17,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import projects.tovy.github.ItemHandeling;
 import projects.tovy.github.Main;
+import projects.tovy.github.EasyGuiBorder; // Import EasyGuiBorder
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +28,7 @@ public class WarpCMD implements CommandExecutor, Listener {
     private final String p;
     private final String error;
     private final Main main;
+    private final EasyGuiBorder guiBorder;
 
     public WarpCMD(Main main, WarpManager warpManager) {
         this.config = main.getPluginConfig();
@@ -34,6 +36,7 @@ public class WarpCMD implements CommandExecutor, Listener {
         this.error = config.getString("errormsg");
         this.main = main;
         this.warpManager = warpManager;
+        this.guiBorder = new EasyGuiBorder();
         Bukkit.getPluginManager().registerEvents(this, main);
     }
 
@@ -95,7 +98,8 @@ public class WarpCMD implements CommandExecutor, Listener {
 
     private void openWarpGui(Player player) {
         List<WarpManager.WarpStatus> warpStatuses = warpManager.getWarpsWithStatus(player);
-        Inventory gui = Bukkit.createInventory(null, 54, "Warps");
+
+        Inventory gui = guiBorder.openGuiBorder(player, 54, "Warps");
 
         for (WarpManager.WarpStatus warpStatus : warpStatuses) {
             ItemStack item;
@@ -108,7 +112,7 @@ public class WarpCMD implements CommandExecutor, Listener {
                     lore.add("");
                     lore.add(ChatColor.YELLOW + "Right click to warp");
                     meta.setLore(lore);
-                    item.setItemMeta(meta);
+                        item.setItemMeta(meta);
                 }
             } else {
                 item = new ItemStack(Material.RED_DYE);
@@ -127,7 +131,6 @@ public class WarpCMD implements CommandExecutor, Listener {
 
         player.openInventory(gui);
     }
-
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         if (!(event.getWhoClicked() instanceof Player)) return;
@@ -153,3 +156,4 @@ public class WarpCMD implements CommandExecutor, Listener {
         }
     }
 }
+

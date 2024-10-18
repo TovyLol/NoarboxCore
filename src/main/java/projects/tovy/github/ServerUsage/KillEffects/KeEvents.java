@@ -1,5 +1,6 @@
 package projects.tovy.github.ServerUsage.KillEffects;
 
+import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -30,7 +31,7 @@ public class KeEvents implements Listener {
 
         try (Connection conn = keDataBase.getConnection()) {
             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM player_effects WHERE player_uuid = ?");
-            stmt.setString(1, killer.getUniqueId().toString()); // changed to uuid bc i liked it :3
+            stmt.setString(1, killer.getUniqueId().toString());
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
@@ -58,6 +59,7 @@ public class KeEvents implements Listener {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            killer.sendMessage(ChatColor.BLUE + "Noarbox | " + ChatColor.WHITE + "An error occured whilst playing the KillEffect");
         }
     }
 }

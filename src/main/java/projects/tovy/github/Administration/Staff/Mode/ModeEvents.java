@@ -1,6 +1,5 @@
 package projects.tovy.github.Administration.Staff.Mode;
 
-import com.sk89q.worldguard.bukkit.event.entity.DamageEntityEvent;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
@@ -13,7 +12,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.inventory.InventoryCreativeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
@@ -38,24 +37,27 @@ public class ModeEvents implements Listener {
     }
 
     @EventHandler
-    public void onInventoryClick(InventoryClickEvent e) {
+    public void onInventoryClick(InventoryCreativeEvent e) {
+        if (mmain == null) {
+            return; // Early exit if mmain is null
+        }
         Player player = (Player) e.getWhoClicked();
-        boolean modeEnabled = mmain.getCommands().isEnabled(player);
+        boolean modeEnabled = mmain.getModeCommands().isEnabled(player);
         if (modeEnabled) {
             e.setCancelled(true);
         }
     }
+
     @EventHandler
     public void onDisconnect(PlayerQuitEvent e) {
         Player p = e.getPlayer();
         main.sendToPermission(ChatColor.BOLD.RED + "WARNING" + ChatColor.WHITE + p + " Logged in while in staff mode, Investigate", "noarbox.operator.usage", p);
-
     }
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
-        if (mmain.getCommands().isEnabled(p)) {
+        if (mmain.getModeCommands().isEnabled(p)) {
             main.sendToPermission(ChatColor.BOLD.RED + "WARNING" + ChatColor.WHITE + p + " Logged in while in staff mode, Investigate", "noarbox.operator.usage", p);
             main.sendTitle(p, ChatColor.BOLD.RED + "Warning", ChatColor.WHITE + "You logged in whilst in staff mode, operators are notified");
             main.playWarningSound(p, p.getLocation());
@@ -65,10 +67,9 @@ public class ModeEvents implements Listener {
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
         Player p = event.getEntity();
-        if (mmain.getCommands().isEnabled(p)) {
+        if (mmain.getModeCommands().isEnabled(p)) {
             playerRespawnFlag.put(event.getEntity().getUniqueId(), true);
         }
-
     }
 
     @EventHandler
@@ -80,14 +81,14 @@ public class ModeEvents implements Listener {
             main.playWarningSound(p, p.getLocation());
             main.sendTitle(p, ChatColor.RED + "Warning", ChatColor.RED + "You died in Staffmode, Staffmode got turned off");
             playerRespawnFlag.put(playerId, false);
-            mmain.getCommands().setEnabled(p, false);
+            mmain.getModeCommands().setEnabled(p, false);
         }
     }
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent e) {
         Player p = e.getPlayer();
-        if (mmain.getCommands().isEnabled(p)) {
+        if (mmain.getModeCommands().isEnabled(p)) {
             e.setCancelled(true);
             no(p);
         }
@@ -100,7 +101,7 @@ public class ModeEvents implements Listener {
             Entity damager = entityEvent.getDamager();
             if (damager instanceof Player) {
                 Player player = (Player) damager;
-                if (mmain.getCommands().isEnabled(player)) {
+                if (mmain.getModeCommands().isEnabled(player)) {
                     e.setCancelled(true);
                     no(player);
                 } else {
@@ -115,7 +116,7 @@ public class ModeEvents implements Listener {
         Entity f = e.getEntity();
         if (f instanceof Player) {
             Player p = (Player) f;
-            if (mmain.getCommands().isEnabled(p)) {
+            if (mmain.getModeCommands().isEnabled(p)) {
                 e.setCancelled(true);
                 p.sendMessage(ChatColor.RED + "Picking up Items is not permitted!");
                 p.playSound(p.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1);
